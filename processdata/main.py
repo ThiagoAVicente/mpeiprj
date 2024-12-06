@@ -1,5 +1,6 @@
 import csv
 import sys
+import re
 
 def read_csv(name):
 
@@ -28,7 +29,13 @@ def process_data(label, data, columns):
     # process data
 
     label = [label[col] for col in columns]
-    data = [[row[col] for col in columns] for row in data]
+    data = [
+        [
+            re.sub(r'[^\sa-zA-Z0-9]', '', row[col])
+            for col in columns
+        ]
+        for row in data
+    ]
     return label, data
 
 def prepare_data(data):
@@ -38,6 +45,7 @@ def prepare_data(data):
 
     new_data = []
 
+    # remove rows with rating 3 or that have a empty field
     for row in data:
 
         rating = int(row[3])
