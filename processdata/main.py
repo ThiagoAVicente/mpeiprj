@@ -72,9 +72,9 @@ def addFakeNames(data,labels,percentage):
 
 def write_csv(name, label, data):
 
-    with open(name, 'w') as fout:
+    with open(name, 'a') as fout:
         # write label
-        fout.write(','.join(label) + '\n')
+        #fout.write(','.join(label) + '\n')
         # write data
         for row in data:
             fout.write(','.join(row) + '\n')
@@ -103,7 +103,7 @@ def prepare_data(data):
     i = 0
     for row in data:
         i+=1
-        rating = int(row[3])
+        rating = int(row[6])
 
         if rating == 3 or '' in row:
             continue
@@ -119,8 +119,10 @@ def prepare_data(data):
         new_row[2] = new_row[2].lower()
 
 
-        new_row[3] = str(score)
-        new_data.append(new_row)
+        new_row[6] = str(score)
+
+        if score == 0:
+            new_data.append(new_row)
 
 
     return new_data
@@ -131,7 +133,10 @@ if __name__ == '__main__':
     # get script call argument
     label,data = read_csv(sys.argv[1])
     if len(sys.argv) == 5:
+        print("fake names...")
         label,data = addFakeNames(data,label,float(sys.argv[4]))
+        print(label)
+        print("done...")
     data = prepare_data(data)
     inds = list(map(int, sys.argv[2].split(',')))
     label.append("emojis")
