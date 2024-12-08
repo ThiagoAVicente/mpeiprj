@@ -18,16 +18,16 @@ for feature_i = 1:numFeatures
     % class 1
     loglikelihood(1,feature_i) = log(...
         sum( ...
-        (BoW(y==classes(1),feature_i)+1)/ ... % all occurencies of this feature
-        (sum(BoW(y==classes(1),:), "all" ) + numFeatures)... % all occurencies of features in this class
+        (BoW(y==classes(1),feature_i)>0+1)/ ... % all occurencies of this feature
+        (sum(BoW(y==classes(1),:)>0, "all" ) + numFeatures)... % all occurencies of features in this class
         )...
         );
 
     % class 2
     loglikelihood(2,feature_i) = log(...
         sum( ...
-        (BoW(y==classes(2),feature_i)+1)/ ... % all occurencies of this feature
-        (sum(BoW(y==classes(2),:), "all" ) + numFeatures)... % all occurencies of features in this class
+        (BoW(y==classes(2),feature_i)>0+1)/ ... % all occurencies of this feature
+        (sum(BoW(y==classes(2),:)>0, "all" ) + numFeatures)... % all occurencies of features in this class
         )...
         );
 end
@@ -41,7 +41,7 @@ false_negatives = 0;
 
 vocabMap = containers.Map(vocabulary, 1:numel(vocabulary));
 
-for review_i = 1:length(tokenizedReviews)
+for review_i = numReviews-100:numReviews
     
     probs = zeros(1,length(classes));
     probs(1) = log(prior(1));
@@ -106,4 +106,7 @@ for review_i = 1:length(tokenizedReviews)
 
     end
 end
+%%
+true_positives/(true_positives+false_positives)
 
+true_positives/(true_positives+true_negatives)

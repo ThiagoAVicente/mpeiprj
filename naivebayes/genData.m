@@ -17,7 +17,7 @@ train_reviews = reviews(inds);
 tokenizedReviews = cellfun(@(x) cellstr( strsplit(lower(string(x))) ), train_reviews, 'UniformOutput', false);
 
 %% create a limited vocabulary
-numFeatures = 10000;
+numFeatures = 1000;
 
 % filter words to have 3 or more letters
 allWords_no_filter = [tokenizedReviews{:}];
@@ -68,4 +68,7 @@ for review_i = 1:numReviews
 
 end
 close(h);
-
+%%
+save("saved/data.mat","BoW","labels","train_reviews","y","tokenizedReviews")
+%%
+save("saved/vocabulary.mat","vocabulary")
