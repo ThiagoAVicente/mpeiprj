@@ -1,0 +1,33 @@
+function similar = findSimilar(item,shingle_size,MH,threshold,R)
+    % return an array of items that are similar to the input item using
+    % jacard distance
+
+    sentence = string(item);
+    len = strlength(sentence);
+    % if length of the row is less than shingle size then skip it
+    if len < shingle_size
+        disp("cannot create shingles from item")
+        return;
+    end
+
+    % get shingles in item
+    shingles = cell(1);
+    char_sentence = char(sentence);
+
+    for shingle_ind = 1:shingle_size:len-shingle_size+1
+        % add shilgle to the Set 
+        shingles{1} = [shingles{1} char_sentence(shingle_ind:shingle_ind+shingle_size-1)];
+    end
+
+    % apply hash function
+    MH2 = genMH(shingles,R);
+
+    % compare to each element in MH
+    for column_i = 1:size()
+        % calculate jaccard distance
+
+        % if jaccard distance is threshold
+
+    
+
+end
