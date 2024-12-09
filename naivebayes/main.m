@@ -1,5 +1,11 @@
 %% laod data
-load("saved/data.mat")
+clear
+clc
+
+load("savedBalanced/dataBalanced.mat")
+load("savedBalanced/vocabularyBalances.mat")
+numReviews = length(train_reviews);
+minSize = 3;
 numFeatures = size(BoW,2);
 %% prior
 classes = unique(y);
@@ -18,16 +24,16 @@ for feature_i = 1:numFeatures
     % class 1
     loglikelihood(1,feature_i) = log(...
         sum( ...
-        (BoW(y==classes(1),feature_i)>0+1)/ ... % all occurencies of this feature
-        (sum(BoW(y==classes(1),:)>0, "all" ) + numFeatures)... % all occurencies of features in this class
+        (BoW(y==classes(1),feature_i)>0)/ ... % all occurencies of this feature
+        (sum(BoW(y==classes(1),:)>0, "all" ))... % all occurencies of features in this class
         )...
         );
 
     % class 2
     loglikelihood(2,feature_i) = log(...
         sum( ...
-        (BoW(y==classes(2),feature_i)>0+1)/ ... % all occurencies of this feature
-        (sum(BoW(y==classes(2),:)>0, "all" ) + numFeatures)... % all occurencies of features in this class
+        (BoW(y==classes(2),feature_i)>0)/ ... % all occurencies of this feature
+        (sum(BoW(y==classes(2),:)>0, "all" ) )... % all occurencies of features in this class
         )...
         );
 end
@@ -41,7 +47,7 @@ false_negatives = 0;
 
 vocabMap = containers.Map(vocabulary, 1:numel(vocabulary));
 
-for review_i = numReviews-100:numReviews
+for review_i = 1:numReviews
     
     probs = zeros(1,length(classes));
     probs(1) = log(prior(1));
@@ -107,6 +113,8 @@ for review_i = numReviews-100:numReviews
     end
 end
 %%
-true_positives/(true_positives+false_positives)
+precision = true_positives/(true_positives+false_positives);
+recall = true_positives/(true_positives+false_negatives);
+accuracy = (true_negatives+true_positives)/numReviews;
 
-true_positives/(true_positives+true_negatives)
+fprintf("Accuracy: %.2f\nRecall: %.2f\nPrecision: %.2f",accuracy,recall,precision)

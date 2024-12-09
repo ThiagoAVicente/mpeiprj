@@ -8,7 +8,7 @@ reviews = data(2:end,2);
 labels = data(2:end,3);
 
 %% separe training data
-inds = randsample(1:length(reviews),round(length(reviews)/2));
+inds = randsample(1:length(reviews),10000);
 y = cell2mat(labels(inds));
 train_reviews = reviews(inds);
 
@@ -17,25 +17,37 @@ train_reviews = reviews(inds);
 tokenizedReviews = cellfun(@(x) cellstr( strsplit(lower(string(x))) ), train_reviews, 'UniformOutput', false);
 
 %% create a limited vocabulary
-numFeatures = 1000;
+numFeatures = 230;
+
+%%% [TODO] equilibrar labels
+allWords_no_filterGood = [tokenizedReviews(y == 1)];
+allWordsGood = allWords_no_filterGood(cellfun(@(x) length(x)>minSize-1,allWords_no_filterGood ) );
 
 % filter words to have 3 or more letters
-allWords_no_filter = [tokenizedReviews{:}];
-allWords = allWords_no_filter(cellfun(@(x) length(x)>minSize-1,allWords_no_filter ) );
+allWords_no_filterBad = [tokenizedReviews(y==0)];
+allWordsBad = allWords_no_filterBad(cellfun(@(x) length(x)>minSize-1,allWords_no_filterBad ) );
 
 % get unique words
-[uniqueWords,~,wordIndices] = unique(allWords);
+[uniqueWordsGood,~,wordIndicesGood] = unique([allWordsGood{:}]);
+[uniqueWordsBad,~,wordIndicesBad] = unique([allWordsBad{:}]);
 
 % get the first "numFeatures" more used words
-WordsCount = accumarray(wordIndices,1);
-[~,idx] = sort(WordsCount,'descend');
-vocabulary = uniqueWords(idx(1:numFeatures));
+WordsCountGood = accumarray(wordIndicesGood,1);
+WordsCountBad = accumarray(wordIndicesBad,1);
+
+[~,idxGood] = sort(WordsCountGood,'descend');
+[~,idxBad] = sort(WordsCountBad,'descend');
+
+vocabulary = unique([uniqueWordsGood(idxGood(1:numFeatures))...
+               uniqueWordsBad(idxBad(1:numFeatures)) ]);
 
 %% BoW
 vocabMap = containers.Map(vocabulary, 1:numel(vocabulary));
 
+szVocab = length(vocabulary);
+
 numReviews = length(train_reviews);
-BoW = sparse(numReviews,numFeatures);
+BoW = sparse(numReviews,szVocab);
 
 h = waitbar(0, 'BoW...');
 
@@ -60,7 +72,7 @@ for review_i = 1:numReviews
         );
 
     % save in the sparse matrix
-    BoW(review_i,:) = accumarray(indices',1,[numFeatures,1])';
+    BoW(review_i,:) = accumarray(indices',1,[szVocab,1])';
 
     if mod(review_i, 100) == 0
         waitbar(review_i / numReviews, h);
@@ -69,6 +81,6 @@ for review_i = 1:numReviews
 end
 close(h);
 %%
-save("saved/data.mat","BoW","labels","train_reviews","y","tokenizedReviews")
+save("savedBalanced/dataBalanced.mat","BoW","labels","train_reviews","y","tokenizedReviews")
 %%
-save("saved/vocabulary.mat","vocabulary")
+save("savedBalanced/vocabularyBalances.mat","vocabulary")
