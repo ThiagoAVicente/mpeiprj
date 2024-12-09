@@ -5,12 +5,12 @@ data = readcell("output.csv");
 reviews = data(2:10000,2);
 
 %% get shingles
-shingle_size = 4;
-[shingles,indices] = genSetOfShingles(reviews,shingle_size);
+%shingle_size = 4;
+%[shingles,indices] = genSetOfShingles(reviews,shingle_size);
 
 %%
-save("saved/data","shingles","indices");
-
+%save("saved/data","shingles","indices");
+load("saved/data.mat")
 %% hash fucntion
 % get num of unique shingles for creating hash function
 numShingles = length(...
@@ -25,3 +25,5 @@ MH = genMH(shingles,R);
 
 %%
 similar = findSimilar('very good app',shingle_size,MH,0.1,R);
+
+disp(reviews(indices(similar)));
