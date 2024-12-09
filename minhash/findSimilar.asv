@@ -15,7 +15,7 @@ function similar = findSimilar(item,shingle_size,MH,threshold,R)
     row = {};
     char_sentence = char(sentence);
 
-    for shingle_ind = 1:len-shingle_size+1
+    for shingle_ind = 1:shingle_size:len-shingle_size+1
         % add shilgle to the Set 
         row{end+1} = [char_sentence(shingle_ind:shingle_ind+shingle_size-1)];
     end
@@ -31,8 +31,8 @@ function similar = findSimilar(item,shingle_size,MH,threshold,R)
         column = MH(:,column_i);
 
         % calculate jaccard distance
-        j = sum(MH2(:) == column(:))/...
-            R.k;
+        j = sum(MH2 == column)/...
+            length(unique([MH2' column']));
         
         % if jaccard distance is threshold
         if 1-j < threshold

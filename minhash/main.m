@@ -2,10 +2,10 @@
 clear
 clc
 data = readcell("output.csv");
-reviews = data(:,2);
+reviews = data(2:10000,2);
 
 %% get shingles
-shingle_size = 5;
+shingle_size = 4;
 [shingles,indices] = genSetOfShingles(reviews,shingle_size);
 
 %%
@@ -22,5 +22,6 @@ R = genHashFunc(numShingles,shingle_size);
 
 %%
 MH = genMH(shingles,R);
+
 %%
-similar = findSimilar('very good application',shingle_size,MH,0.1,R);
+similar = findSimilar('very good app',shingle_size,MH,0.1,R);
