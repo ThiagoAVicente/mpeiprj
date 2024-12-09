@@ -1,9 +1,9 @@
+% thiago vicente - 121497
 %% laod data
 clear
 clc
+load("saved/data.mat")
 
-load("savedBalanced/dataBalanced.mat")
-load("savedBalanced/vocabularyBalances.mat")
 numReviews = length(train_reviews);
 minSize = 3;
 numFeatures = size(BoW,2);
@@ -24,8 +24,8 @@ for feature_i = 1:numFeatures
     % class 1
     loglikelihood(1,feature_i) = log(...
         sum( ...
-        (BoW(y==classes(1),feature_i)>0)/ ... % all occurencies of this feature
-        (sum(BoW(y==classes(1),:)>0, "all" ))... % all occurencies of features in this class
+        (BoW(y==classes(1),feature_i))/ ... % all occurencies of this feature
+        (sum(BoW(y==classes(1),:), "all" ))... % all occurencies of features in this class
         )...
         );
 

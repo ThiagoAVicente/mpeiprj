@@ -1,14 +1,15 @@
+% thiago vicente - 121497
+
 %% load data
 clear
 clc
-data = readcell("output.csv");
-reviews = data(2:10000,2);
+data = readcell("reduced.csv");
+reviews = data(2:end,2);
 
 %% get shingles
 shingle_size = 4;
 [shingles,indices] = genSetOfShingles(reviews,shingle_size);
 
-%%
 %% hash fucntion
 % get num of unique shingles for creating hash function
 numShingles = length(...
@@ -18,11 +19,8 @@ numShingles = length(...
 % gen hash function
 R = genHashFunc(numShingles,shingle_size);
 
-%%
+%% minhash matrice
 MH = genMH(shingles,R);
 
-%%
-similar = findSimilar('very good app',shingle_size,MH,0.1,R);
-
 %% save
-save("saved/data","shingles","indices","MH","similar","R","numShingles","reviews");
+save("saved/data","shingles","indices","MH","R","numShingles","reviews","shingle_size");

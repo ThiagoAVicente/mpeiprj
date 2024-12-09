@@ -1,5 +1,6 @@
 function MH = genMH(Set,R)
     % return a minhash matrice
+    % thiago vicente - 121497 
 
     % initialize minhash matrice with inf values
     MH = inf(R.k,length(Set));

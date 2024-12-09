@@ -1,5 +1,6 @@
 function tokens = tokenize(data)
     % return all tokens of data
+    % thiago vicente -121497
 
     tokens = containers.Map();
 
@@ -30,18 +31,16 @@ function tokens = tokenize(data)
                 for token_i = 1:length(tokenKeys)
                     token = tokenKeys{token_i};
 
-                    % Se o token começa com a palavra ou se a palavra começa com o token
-                    if startsWith(token, word)  % Substitui o token por uma versão mais curta
-                        tokens(token) = word; % Substitui o token
-                        add = false; % Não adiciona, pois o token foi substituído
+                    if startsWith(token, word)  
+                        tokens(token) = word; 
+                        add = false; 
                         break;
-                    elseif startsWith(word, token) % Se a palavra é um prefixo do token, não adiciona
+                    elseif startsWith(word, token) 
                         add = false;
                         break;
                     end
                 end
 
-                % Se a palavra não substituir um token existente, adiciona
                 if add
                     tokens(word) = word;
                 end

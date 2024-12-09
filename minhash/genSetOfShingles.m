@@ -1,6 +1,7 @@
 function [Set,indices] = genSetOfShingles(data,shingle_size)
     % return a set of every shingle contained in data
     % also returns an array of indices of used rows
+    % thiago vicente - 121497
     
     Set = {};
     indices = [];

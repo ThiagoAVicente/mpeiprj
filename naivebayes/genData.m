@@ -1,14 +1,15 @@
+% thiago vicente -121497
 clear
 clc
 
-data = readcell("output.csv");
+data = readcell("reduced.csv");
 minSize = 3;
 %% 
 reviews = data(2:end,2);
 labels = data(2:end,3);
 
 %% separe training data
-inds = randsample(1:length(reviews),10000);
+inds = randsample(1:length(reviews),7500);
 y = cell2mat(labels(inds));
 train_reviews = reviews(inds);
 
@@ -17,15 +18,15 @@ train_reviews = reviews(inds);
 tokenizedReviews = cellfun(@(x) cellstr( strsplit(lower(string(x))) ), train_reviews, 'UniformOutput', false);
 
 %% create a limited vocabulary
-numFeatures = 230;
+numFeatures = 300;
 
-%%% [TODO] equilibrar labels
+% get features from each class
 allWords_no_filterGood = [tokenizedReviews(y == 1)];
-allWordsGood = allWords_no_filterGood(cellfun(@(x) length(x)>minSize-1,allWords_no_filterGood ) );
+allWords_no_filterBad = [tokenizedReviews(y==0)];
 
 % filter words to have 3 or more letters
-allWords_no_filterBad = [tokenizedReviews(y==0)];
 allWordsBad = allWords_no_filterBad(cellfun(@(x) length(x)>minSize-1,allWords_no_filterBad ) );
+allWordsGood = allWords_no_filterGood(cellfun(@(x) length(x)>minSize-1,allWords_no_filterGood ) );
 
 % get unique words
 [uniqueWordsGood,~,wordIndicesGood] = unique([allWordsGood{:}]);
@@ -81,6 +82,4 @@ for review_i = 1:numReviews
 end
 close(h);
 %%
-save("savedBalanced/dataBalanced.mat","BoW","labels","train_reviews","y","tokenizedReviews")
-%%
-save("savedBalanced/vocabularyBalances.mat","vocabulary")
+save("saved/data.mat","BoW","labels","train_reviews","y","tokenizedReviews","vocabulary")

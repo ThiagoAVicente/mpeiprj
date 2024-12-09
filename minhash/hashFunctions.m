@@ -1,4 +1,6 @@
 function hc = hashFunctions(item,R,hf)
+    % return a hashcode
+    % thiago vicente - 121497
 
     % use ascii values of item
     ASCII = double(...
@@ -7,7 +9,7 @@ function hc = hashFunctions(item,R,hf)
 
     % get values from R
     r = R.values(hf,:);
-    dis = R.disrupt;
+    dis = R.distributionFactor;
     b = R.b(hf);
     p = R.p;
     ASCII = ASCII.*p-dis;

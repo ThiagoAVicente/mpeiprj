@@ -1,13 +1,13 @@
 function similar = findSimilar(item,shingle_size,MH,threshold,R)
     % return an array of items that are similar to the input item using
     % jacard distance
+    % thiago vicente - 121497
 
     sentence = string(item);
     len = strlength(sentence);
     % if length of the row is less than shingle size then skip it
     if len < shingle_size
-        disp("cannot create shingles from item")
-        return;
+        error("[ERROR] cannot create shingles from item")
     end
 
     % get shingles in item
