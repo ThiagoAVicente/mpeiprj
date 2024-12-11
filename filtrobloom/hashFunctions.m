@@ -16,7 +16,7 @@ function hc = hashFunctions(item,prime,hf)
     for i = 1:sizeString
         carac = ASCII(i);
 
-        hc = prime*h + carac;
+        hc = prime*hc + carac;
     end
 
 end
