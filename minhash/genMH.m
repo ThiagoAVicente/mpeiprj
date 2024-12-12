@@ -5,6 +5,9 @@ function MH = genMH(Set,R)
     % initialize minhash matrice with inf values
     MH = inf(R.k,length(Set));
 
+    h = waitbar(0, 'MH...');
+    totalIterations = length(Set) * R.k;
+
     % for each row in Set
     for row_i =1:length(Set)
         
@@ -20,10 +23,10 @@ function MH = genMH(Set,R)
 
             % for each hash functions 
             for hf = 1:R.k
-               
+                %tic
                 % calculate hashcode
-                hc = hashFunctions(elem,R,hf);
-                
+                hc = hashFunctionsBin(elem,R,hf);
+                %toc
                 % if new hashcode is greateer than previous, change it
                 if MH(hf,row_i) > hc
                     MH(hf,row_i) = hc;
@@ -32,6 +35,10 @@ function MH = genMH(Set,R)
             end
         end
 
+        if mod(row_i, 100) == 0
+            waitbar(row_i / length(Set), h);
+        end
     end
 
+    close(h);
 end

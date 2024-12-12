@@ -5,10 +5,14 @@ clc
 load("saved/data.mat")
 
 %% find similar
-threshold = 0.1;
-similar = findSimilar('very good application',...
+threshold = 0.5;
+similar = findSimilar('great one',...
                     shingle_size,MH, ...
                     threshold,R);
 
+% remove missing values
+users(cellfun(@(x) isa(x, 'missing'), users)) = {'unknown'};
+for i = indices(similar)
+    fprintf("%s: %s\n",users{i},reviews{i});
 
-disp(reviews(indices(similar)));
+end

@@ -6,10 +6,12 @@ data = readcell("reduced.csv");
 minSize = 3;
 %% 
 reviews = data(2:end,2);
+emojis = cell2mat(data(2:end,4));
 labels = data(2:end,3);
 
 %% separe training data
-inds = randsample(1:length(reviews),7500);
+%inds = randsample(1:length(reviews),7500);
+inds = 1:length(reviews);
 y = cell2mat(labels(inds));
 train_reviews = reviews(inds);
 
@@ -18,7 +20,7 @@ train_reviews = reviews(inds);
 tokenizedReviews = cellfun(@(x) cellstr( strsplit(lower(string(x))) ), train_reviews, 'UniformOutput', false);
 
 %% create a limited vocabulary
-numFeatures = 300;
+numFeatures = 1000;
 
 % get features from each class
 allWords_no_filterGood = [tokenizedReviews(y == 1)];
@@ -81,5 +83,11 @@ for review_i = 1:numReviews
 
 end
 close(h);
-%%
-save("saved/data.mat","BoW","labels","train_reviews","y","tokenizedReviews","vocabulary")
+
+%% calculate the length of each sentence
+train_reviews_length = cellfun( ...
+    @(x) numel(strsplit(string(x))) ...
+    , train_reviews);
+
+%% save data
+save("saved/data.mat","BoW","labels","train_reviews","y","tokenizedReviews","vocabulary","train_reviews_length")

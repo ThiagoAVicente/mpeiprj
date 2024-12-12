@@ -1,4 +1,4 @@
-function R =  genHashFunc(m,shingle_size)
+function R =  genHashFunc(k,shingle_size)
     % returns struct with params for hashfunctions
     % thiago vicente - 121497
 
@@ -11,7 +11,7 @@ function R =  genHashFunc(m,shingle_size)
     end
 
     % compute the num of needed hashfunctions for less colisions
-    nhf = round(largePrime*log(2)/m);
+    nhf = k;
 
     R.values = randi([0 largePrime-1],nhf,shingle_size);
     R.b = randi([0 largePrime-1],nhf,1);

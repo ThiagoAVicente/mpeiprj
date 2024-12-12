@@ -5,7 +5,7 @@ clear
 clc
 data = readcell("reduced.csv");
 reviews = data(2:end,2);
-
+users = data(2:end,1);
 %% get shingles
 shingle_size = 4;
 [shingles,indices] = genSetOfShingles(reviews,shingle_size);
@@ -17,10 +17,11 @@ numShingles = length(...
     [shingles{:}]));
 
 % gen hash function
-R = genHashFunc(numShingles,shingle_size);
+R = genHashFunc(5,shingle_size);
 
 %% minhash matrice
+tic
 MH = genMH(shingles,R);
-
+toc
 %% save
-save("saved/data","shingles","indices","MH","R","numShingles","reviews","shingle_size");
+save("saved/data","shingles","indices","MH","R","numShingles","reviews","shingle_size","users");
