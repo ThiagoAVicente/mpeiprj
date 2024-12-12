@@ -1,23 +1,20 @@
-function hc = hashFunctions(item,prime,hf)
+function hash = hashFunctions(item,hf)
     
-    sizeString = length(item);
-    elemnto = item;
-    for i = 1:hf
-        elemento(sizeString + i) =  num2str(mod(i, 10));
-    end
+    %sizeString = length(item);
+    %elemento = item;
+    %for i = 1:hf
+        %elemento(sizeString + i) =  num2str(mod(i, 10));
+    %end
     
-    elemento
     % use ascii values of item
-    ASCII = double(...
-        char(item));
-    ASCII = ASCII.*(1:numel(item));
-    
+    ASCII = double(item);
+
     % inspiration taken from java implementation of string.hashcode()
-    hc = 1;
-
-    for i = 1:length(ASCII)
-        carac = ASCII(i);
-
-        hc = prime*hc + carac;
+    number = 31 * primes(hf)() 
+    hash = 7;
+    for i=1:size(ASCII,2) 
+        hash = hash * prime + ASCII(:, i);
     end
+   
+    hash = mod(hash, 2^32 - 1); %values were getting a lot big and it has very bad, so this stops it
 end

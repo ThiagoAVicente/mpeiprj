@@ -33,7 +33,7 @@ classdef filtroBloomString
              element = convertStringsToChars(element);
 
              for i = 1:obj.nmrOfFunctions
-                hashcode = mod(hashFunction2(element,i), obj.sizeOfTable) + 1;
+                hashcode = mod(hashFunctions(element,i), obj.sizeOfTable) + 1;
                 obj.hashTable(hashcode) = 1;
              end
 
@@ -57,7 +57,7 @@ classdef filtroBloomString
             element = convertStringsToChars(element);
             
             for i = 1:obj.nmrOfFunctions
-               hashcode = mod(hashFunction2(element,i), obj.sizeOfTable) + 1;
+               hashcode = mod(hashFunctions(element,i), obj.sizeOfTable) + 1;
                if obj.hashTable(hashcode) == 0
                    isIn = 0;
                    return
