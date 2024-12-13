@@ -17,7 +17,7 @@ train_reviews = data(2:end,2);
 tokenizedReviews = cellfun(@(x) cellstr( strsplit(lower(string(x))) ), train_reviews, 'UniformOutput', false);
 
 %% create a limited vocabulary
-numFeatures = 300;
+numFeatures = 700;
 
 % get features from each class
 allWords_no_filterGood = [tokenizedReviews(y == 1)];
@@ -92,7 +92,7 @@ clear allWords_no_filter allWords WordsCount indices i h review_i wordIndices id
 
 %% likelihood using presence of words
 
-loglikelihood = zeros(length(classes),numFeatures);
+loglikelihood = zeros(length(classes),length(vocabulary));
 
 for feature_i = 1:numFeatures
     
@@ -102,7 +102,7 @@ for feature_i = 1:numFeatures
         (BoW(y==classes(1),feature_i)>0)/ ... % all occurencies of this feature
         (sum(BoW(y==classes(1),:), "all" ))... % all occurencies of features in this class
         )...
-        );
+        +eps);
 
     % class 2
     loglikelihood(2,feature_i) = log(...
@@ -110,7 +110,7 @@ for feature_i = 1:numFeatures
         (BoW(y==classes(2),feature_i)>0)/ ... % all occurencies of this feature
         (sum(BoW(y==classes(2),:)>0, "all" ) )... % all occurencies of features in this class
         )...
-        );
+        +eps);
 end
 %%
 clear vocabMap tokenizedReviews tokens train_reviews WordsCountBad WordsCountGood wordIndicesBad wordIndicesGood emojis 
@@ -119,7 +119,7 @@ clear vocabMap tokenizedReviews tokens train_reviews WordsCountBad WordsCountGoo
 data = readcell("test.csv");
 reviews = data(2:end,2);
 users = data(2:end,1);
-
+users(cellfun(@(x) isa(x, 'missing'), users)) = {'unknown'};
 %% MINHASH  --- users reviews indices MH
 
 %% get shingles
@@ -131,32 +131,34 @@ R = MINHASH_genHashFunc(5);
 
 %% minhash matrice
 MH = MINHASH_genMH(shingles,R);
-clear numShingles shingles 
+clear numShingles 
 
 %% BLOOMFILTER --- bloomfilter class
 
-% join all cell of words in reviews
-flattenedReviews = '';
+% join all shingles
+flattenedShingles = '';
 
-% for each review
-for i = 1:length(reviews)
+% for each line of shingles
+for i = 1:length(shingles)
     
-    review = reviews{i};
-    % join review to flattenedReviews
-    flattenedReviews = [flattenedReviews ' ' review ];
+    line_shingles =  shingles{i};
+    for j = length(line_shingles)
 
+        shingle = line_shingles{j};
+
+        % join shingle to flattenedShingles
+        flattenedShingles = [flattenedShingles ';' shingle ];
+    end
 end
 
 % split on ' '
-words = split(flattenedReviews,' ');
+all_shingles = split(flattenedShingles,';');
 %%
 % get unique words
-unique_words = unique(words);
-unique_words = unique_words(cellfun(@(x) length(x)>2,unique_words));
-
+unique_shingles = unique(all_shingles);
 %% create bloomfilter
 
-m = length(unique_words); 
+m = length(unique_shingles); 
 n = m * 100;
 
 % kótimo
@@ -168,8 +170,8 @@ wb = waitbar(0, "bloom filter...");
 
 for i = 1:m
     
-    word = unique_words{i};
-    bloom_filter = bloom_filter.addElement(word); %adiciona a palavra ao filtro
+    shingle = unique_shingles{i};
+    bloom_filter = bloom_filter.addElement(shingle); %adiciona o shingle ao filtro
     
     waitbar(i/m);
 end
@@ -177,4 +179,5 @@ delete(wb)
 
 
 %% save data
-save("save/data.mat","bloom_filter","MH","R","reviews","shingle_size","users","vocabulary","loglikelihood")
+save("save/data.mat","bloom_filter","MH","R","reviews","shingle_size", ...
+            "users","vocabulary","loglikelihood","indices","prior","classes","minSize")

@@ -1,1 +1,0 @@
-NAIVEBAYES_genData
