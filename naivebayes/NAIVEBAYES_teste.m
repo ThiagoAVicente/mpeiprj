@@ -127,4 +127,4 @@ precision = true_positives/(true_positives+false_positives);
 recall = true_positives/(true_positives+false_negatives);
 accuracy = (true_negatives+true_positives)/numReviews;
 F1 = 2*precision*recall/(precision+recall);
-fprintf("Accuracy: %.2f\nRecall: %.2f\nPrecision: %.2f\nF1: %.2f\n2",accuracy,recall,precision,F1)
+fprintf("Accuracy: %.2f\nRecall: %.2f\nPrecision: %.2f\nF1: %.2f\n",accuracy,recall,precision,F1)

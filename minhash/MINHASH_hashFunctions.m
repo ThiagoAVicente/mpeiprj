@@ -1,4 +1,4 @@
-function hc = hashFunctionsBin(item, R, hf)
+function hc = MINHASH_hashFunctions(item, R, hf)
     % return a hashcode using binary numbers
     % important links:
     %   https://www.geeksforgeeks.org/hash-functions-and-list-types-of-hash-functions/

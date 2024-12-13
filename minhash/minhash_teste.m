@@ -5,8 +5,8 @@ clc
 load("saved/data.mat")
 
 %% find similar
-threshold = 0.5;
-similar = findSimilar('great one',...
+threshold = 0.1; % similaridade
+similar = MINHASH_findSimilar('great one',...
                     shingle_size,MH, ...
                     threshold,R);
 

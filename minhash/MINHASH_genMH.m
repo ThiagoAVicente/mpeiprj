@@ -1,4 +1,4 @@
-function MH = genMH(Set,R)
+function MH = MINHASH_genMH(Set,R)
     % return a minhash matrice
     % thiago vicente - 121497 
 
@@ -25,7 +25,7 @@ function MH = genMH(Set,R)
             for hf = 1:R.k
                 %tic
                 % calculate hashcode
-                hc = hashFunctionsBin(elem,R,hf);
+                hc = MINHASH_hashFunctions(elem,R,hf);
                 %toc
                 % if new hashcode is greateer than previous, change it
                 if MH(hf,row_i) > hc
