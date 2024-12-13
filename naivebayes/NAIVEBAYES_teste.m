@@ -7,6 +7,7 @@ load("saved/data.mat")
 numReviews = length(train_reviews);
 minSize = 3;
 numFeatures = size(BoW,2);
+
 %% prior
 classes = unique(y);
 prior = zeros(1,length(classes));
@@ -15,6 +16,7 @@ for i = 1:length(classes)
     prior(i) = sum( y == classes(i))/length(y);
 end
 clear allWords_no_filter allWords WordsCount indices i h review_i wordIndices
+
 %% likelihood using laplace
 
 loglikelihood = zeros(length(classes),numFeatures);
@@ -24,7 +26,7 @@ for feature_i = 1:numFeatures
     % class 1
     loglikelihood(1,feature_i) = log(...
         sum( ...
-        (BoW(y==classes(1),feature_i))/ ... % all occurencies of this feature
+        (BoW(y==classes(1),feature_i)>0)/ ... % all occurencies of this feature
         (sum(BoW(y==classes(1),:), "all" ))... % all occurencies of features in this class
         )...
         );
@@ -37,6 +39,16 @@ for feature_i = 1:numFeatures
         )...
         );
 end
+
+%% calculate the likelihood based on the number of words
+% use exponencial distribution
+
+% sizes for each class
+num_words_class1 = train_reviews_length(y==classes(1));
+num_words_class2 = train_reviews_length(y==classes(2));
+
+% calculate the expected value
+
 
 %% classify 
 
@@ -97,8 +109,6 @@ for review_i = 1:numReviews
             true_negatives = true_negatives+1;
         end
 
-        
-       
     % else
     else
         % false positive
@@ -116,5 +126,5 @@ end
 precision = true_positives/(true_positives+false_positives);
 recall = true_positives/(true_positives+false_negatives);
 accuracy = (true_negatives+true_positives)/numReviews;
-
-fprintf("Accuracy: %.2f\nRecall: %.2f\nPrecision: %.2f",accuracy,recall,precision)
+F1 = 2*precision*recall/(precision+recall);
+fprintf("Accuracy: %.2f\nRecall: %.2f\nPrecision: %.2f\nF1: %.2f\n",accuracy,recall,precision,F1)

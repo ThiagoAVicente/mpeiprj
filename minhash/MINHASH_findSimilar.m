@@ -1,4 +1,4 @@
-function similar = findSimilar(item,shingle_size,MH,threshold,R)
+function similar = MINHASH_findSimilar(item,shingle_size,MH,threshold,R)
     % return an array of items that are similar to the input item using
     % jacard distance
     % thiago vicente - 121497
@@ -22,7 +22,7 @@ function similar = findSimilar(item,shingle_size,MH,threshold,R)
 
     shingles{1} = row;
     % get minHas
-    MH2 = genMH(shingles,R);
+    MH2 = MINHASH_genMH(shingles,R);
 
     similar = [];
     % compare to each element in MH
