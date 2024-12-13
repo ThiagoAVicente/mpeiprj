@@ -1,14 +1,27 @@
 clear
 clc
 
-dic = readcell("save/reduced.csv");
-userNames = dic(:, 1);
+wb = waitbar(0 ,"Load file");
+
+load("save/output.mat")
+
+waitbar(100);
+delete(wb)
+clear wb
+
+wb = waitbar(0, "Creating Bloom Filter");
 
 m = length(userNames); %quantos elementos vao ser adicionados
 n = length(userNames) * 100; % tamanho do filtro
 
 k = floor(n*log10(2) / m); % calcular k otimo (k = funcoes de hash que vao ser usadas)
 filtroBloomUsers = filtroBloomString(n, k); %criar filtro bloom
+
+waitbar(100);
+delete(wb)
+clear wb
+
+wb = waitbar(0, "Checking users");
 
 userRepeated = 0; %variavel que guarda quantos nomes repetidos
 counter = 1;
@@ -27,4 +40,9 @@ for i = 1:m
     else
         filtroBloomUsers = filtroBloomUsers.addElement(name); %adiciona o userName ao filtro
     end
+
+    waitbar(i/m);
 end
+
+delete(wb)
+clear wb

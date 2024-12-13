@@ -10,7 +10,7 @@ classdef filtroBloomString
         nmrOfElements; %nmr de elementos já colocados
         nmrOfFunctions; %nmr de funcoes de hash
         sizeOfTable; % tamanho da hash table(quantos "lugares" tem a tabela)
-        R; %struct that helps the hashcode generation
+        matrixPrime; %matrix that helps the hashcode generation
     end
 
     methods
@@ -23,6 +23,7 @@ classdef filtroBloomString
             obj.sizeOfTable = n;
             obj.nmrOfElements = 0;
             obj.nmrOfFunctions = k;
+            obj.matrixPrime = getNPrimeNumbers(31, k);
         end
 
         function obj = addElement(obj, element)
@@ -33,7 +34,7 @@ classdef filtroBloomString
              element = convertStringsToChars(element);
 
              for i = 1:obj.nmrOfFunctions
-                hashcode = mod(hashFunctions(element,i), obj.sizeOfTable) + 1;
+                hashcode = mod(hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
                 obj.hashTable(hashcode) = 1;
              end
 
@@ -57,7 +58,7 @@ classdef filtroBloomString
             element = convertStringsToChars(element);
             
             for i = 1:obj.nmrOfFunctions
-               hashcode = mod(hashFunctions(element,i), obj.sizeOfTable) + 1;
+               hashcode = mod(hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
                if obj.hashTable(hashcode) == 0
                    isIn = 0;
                    return
