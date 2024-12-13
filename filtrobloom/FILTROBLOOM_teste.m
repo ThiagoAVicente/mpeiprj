@@ -15,7 +15,7 @@ m = length(userNames); %quantos elementos vao ser adicionados
 n = length(userNames) * 100; % tamanho do filtro
 
 k = floor(n*log10(2) / m); % calcular k otimo (k = funcoes de hash que vao ser usadas)
-filtroBloomUsers = filtroBloomString(n, k); %criar filtro bloom
+filtroBloomUsers = FILTROBLOOM_class(n, k); %criar filtro bloom
 
 waitbar(100);
 delete(wb)

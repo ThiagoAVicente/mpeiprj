@@ -1,4 +1,4 @@
-function vectorPrime = getNPrimeNumbers(start, n)
+function vectorPrime = FILTROBLOOM_getNPrimeNumbers(start, n)
 %getNPrimeNumbers   returns a 1xN vector with N prime numbers starting on
 %start
 

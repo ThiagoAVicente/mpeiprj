@@ -1,4 +1,4 @@
-classdef filtroBloomString
+classdef FILTROBLOOM_class
     %FiltroBloom
     %Classe de filtroBloom que permite colocar elementos(tem que ser
     %array de char(string)) e depois rapidamente averiguar se fazem parte ou não do
@@ -14,7 +14,7 @@ classdef filtroBloomString
     end
 
     methods
-        function obj = filtroBloomString(n ,k)
+        function obj = FILTROBLOOM_class(n ,k)
             %Construtor da classe FiltroBloomString
             %Cria um filtroBloom com uma hashTable
             %com n lugares livres e vai usar k funções de hash
@@ -23,7 +23,7 @@ classdef filtroBloomString
             obj.sizeOfTable = n;
             obj.nmrOfElements = 0;
             obj.nmrOfFunctions = k;
-            obj.matrixPrime = getNPrimeNumbers(31, k);
+            obj.matrixPrime = FILTROBLOOM_getNPrimeNumbers(31, k);
         end
 
         function obj = addElement(obj, element)
@@ -34,7 +34,7 @@ classdef filtroBloomString
              element = convertStringsToChars(element);
 
              for i = 1:obj.nmrOfFunctions
-                hashcode = mod(hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
+                hashcode = mod(FILTROBLOOM_hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
                 obj.hashTable(hashcode) = 1;
              end
 
@@ -58,7 +58,7 @@ classdef filtroBloomString
             element = convertStringsToChars(element);
             
             for i = 1:obj.nmrOfFunctions
-               hashcode = mod(hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
+               hashcode = mod(FILTROBLOOM_hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
                if obj.hashTable(hashcode) == 0
                    isIn = 0;
                    return

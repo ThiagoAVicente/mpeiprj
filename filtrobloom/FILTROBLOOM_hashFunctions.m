@@ -1,4 +1,4 @@
-function hash = hashFunctions(item,matrixPrime,hf)
+function hash = FILTROBLOOM_hashFunctions(item,matrixPrime,hf)
     
     ASCII = double(item);
 
