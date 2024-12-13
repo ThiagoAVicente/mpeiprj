@@ -38,8 +38,8 @@ WordsCountBad = accumarray(wordIndicesBad,1);
 [~,idxGood] = sort(WordsCountGood,'descend');
 [~,idxBad] = sort(WordsCountBad,'descend');
 
-vocabulary = unique([uniqueWordsGood(idxGood(1:numFeatures))...
-               uniqueWordsBad(idxBad(1:numFeatures)) ]);
+vocabulary = unique([uniqueWordsGood(idxGood)...
+               uniqueWordsBad(idxBad) ]);
 
 %% BoW
 vocabMap = containers.Map(vocabulary, 1:numel(vocabulary));
