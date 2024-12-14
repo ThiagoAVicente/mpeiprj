@@ -6,10 +6,15 @@ number = start;
 vectorPrime = zeros(1, n);
 counter = 1;
 
-while(counter < n + 1)
+if mod(start,2) == 0
+    number = number+1;
+end
+
+while(counter < n+1)
     if isprime(number)
         vectorPrime(counter) = number;
         counter = counter + 1;
     end
-    number = number + 1;
+    number = number + 2;
+   
 end

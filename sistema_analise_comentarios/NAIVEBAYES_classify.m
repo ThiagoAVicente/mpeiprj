@@ -38,7 +38,6 @@ function res = NAIVEBAYES_classify(review,prior,vocabulary,loglikelihood,classes
 
     end
 
-    classes
     % compare the true response with the classifier's one
     res = classes(1);
     if probs(2) > probs(1)

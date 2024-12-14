@@ -187,16 +187,10 @@ k = floor(n*log10(2) / m);
 %% create counting bf
 counting_bloom_filter = COUNTINGBF_class(n,k);
 
-% add users to bloom bf
-wb = waitbar(0, "counting bloom filter...");
-
 for i = 1:length(users)
-    user = lower( ...
-        users{i});
-    counting_bloom_filter = counting_bloom_filter.addElement(user);
-    waitbar(i/m);
+    user = lower()
+
 end
-delete(wb)
 
 %% save data
 save("save/data.mat","bloom_filter","MH","R","reviews","shingle_size", ...
