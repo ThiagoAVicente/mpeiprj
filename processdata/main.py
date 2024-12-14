@@ -74,22 +74,25 @@ def write_csv(name, label, data):
 
     with open(name, 'a') as fout:
         # write label
-        #fout.write(','.join(label) + '\n')
+        #fout.write('ª'.join(label) + '\n')
         # write data
         for row in data:
-            fout.write(','.join(row) + '\n')
+            #print(';'.join(row) + '\n')
+            fout.write('ª'.join(row) + '\n')
 
 def process_data(label, data, columns):
     # process data
 
     label = [label[col] for col in columns]
-    data = [
-        [
-            re.sub(r'[^\sa-zA-Z0-9]', '', row[col])
-            for col in columns
-        ]
-        for row in data
-    ]
+    data = [[row[col] for col in columns] for row in data]
+
+    #data = [
+    #    [
+    #        re.sub(r'[^\sa-zA-Z0-9]', '', row[col])
+    #        for col in columns
+    #    ]
+    #    for row in data
+    #]
     return label, data
 
 def prepare_data(data):
@@ -103,26 +106,21 @@ def prepare_data(data):
     i = 0
     for row in data:
         i+=1
-        rating = int(row[6])
-
-        if rating == 3 or '' in row:
-            continue
+        rating = int(row[2])
 
         new_row = row
         score = 0
 
         if rating > 3:
-           score = 1
+            score = 1
 
-
-        new_row.append(str(check_for_emojis(new_row[2])))
-        new_row[2] = new_row[2].lower()
-
-
-        new_row[6] = str(score)
+        new_row[1] = row[1].replace("ª","")
+        #print(score)
+        new_row[2] = str(score)
 
         if score == 0:
             new_data.append(new_row)
+        #new_data.append(new_row)
 
 
     return new_data
@@ -139,6 +137,5 @@ if __name__ == '__main__':
         print("done...")
     data = prepare_data(data)
     inds = list(map(int, sys.argv[2].split(',')))
-    label.append("emojis")
     label,data = process_data(label,data,inds)
     write_csv(sys.argv[3],label,data)

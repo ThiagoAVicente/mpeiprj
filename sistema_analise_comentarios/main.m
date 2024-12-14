@@ -53,6 +53,8 @@ review = reviews{...
             similar(line) ...
             )};
 
+review = NAIVEBAYES_prepare(review);
+
 %% calcular probabilidades
 predicted_class = NAIVEBAYES_classify(review,prior,vocabulary,loglikelihood,classes,minSize);
 response = "(1,2)";

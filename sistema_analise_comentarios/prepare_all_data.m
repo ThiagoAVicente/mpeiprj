@@ -3,7 +3,7 @@ clc
 
 %% NAIVE BAYES --- likelihood  vocabulary minsizeBoW classes prior
 
-data = readcell("reduced.csv");
+data = readcell("train_15000.csv",Delimiter='ª');
 minSize = 3;
 
 %% separe training data
@@ -14,32 +14,18 @@ train_reviews = data(2:end,2);
 
 %% tokenize reviews
 
-tokenizedReviews = cellfun(@(x) cellstr( strsplit(lower(string(x))) ), train_reviews, 'UniformOutput', false);
+tokenizedReviews = cellfun(@(x) cellstr( ...
+           strsplit(string( ...
+                    NAIVEBAYES_prepare(x)) ...
+            )), ...
+            train_reviews, 'UniformOutput', false);
 
 %% create a limited vocabulary
-numFeatures = 700;
-
-% get features from each class
-allWords_no_filterGood = [tokenizedReviews(y == 1)];
-allWords_no_filterBad = [tokenizedReviews(y==0)];
 
 % filter words to have 3 or more letters
-allWordsBad = allWords_no_filterBad(cellfun(@(x) length(x)>minSize-1,allWords_no_filterBad ) );
-allWordsGood = allWords_no_filterGood(cellfun(@(x) length(x)>minSize-1,allWords_no_filterGood ) );
-
+allWords = tokenizedReviews(cellfun(@(x) length(x)>minSize-1,tokenizedReviews ) );
 % get unique words
-[uniqueWordsGood,~,wordIndicesGood] = unique([allWordsGood{:}]);
-[uniqueWordsBad,~,wordIndicesBad] = unique([allWordsBad{:}]);
-
-% get the first "numFeatures" more used words
-WordsCountGood = accumarray(wordIndicesGood,1);
-WordsCountBad = accumarray(wordIndicesBad,1);
-
-[~,idxGood] = sort(WordsCountGood,'descend');
-[~,idxBad] = sort(WordsCountBad,'descend');
-
-vocabulary = unique([uniqueWordsGood(idxGood)...
-               uniqueWordsBad(idxBad) ]);
+vocabulary = unique([allWords{:}]);
 
 %% BoW
 vocabMap = containers.Map(vocabulary, 1:numel(vocabulary));
@@ -93,7 +79,8 @@ clear allWords_no_filter allWords WordsCount indices i h review_i wordIndices id
 %% likelihood using presence of words
 
 loglikelihood = zeros(length(classes),length(vocabulary));
-
+h = waitbar(0, 'likelihood...');
+numFeatures = length(vocabulary);
 for feature_i = 1:numFeatures
     
     % class 1
@@ -111,12 +98,17 @@ for feature_i = 1:numFeatures
         (sum(BoW(y==classes(2),:)>0, "all" ) )... % all occurencies of features in this class
         )...
         +eps);
+
+    if mod(feature_i, 100) == 0
+        waitbar(feature_i / numFeatures, h);
+    end
 end
+close(h);
 %%
 clear vocabMap tokenizedReviews tokens train_reviews WordsCountBad WordsCountGood wordIndicesBad wordIndicesGood emojis 
 
 %% change data file
-data = readcell("test.csv");
+data = readcell("test_15000.csv",Delimiter='ª');
 reviews = data(2:end,2);
 users = data(2:end,1);
 users(cellfun(@(x) isa(x, 'missing'), users)) = {'unknown'};

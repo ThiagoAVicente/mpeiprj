@@ -40,7 +40,7 @@ def main():
 
     print("reading...")
     with open( file, "r") as fin:
-        reader = csv.reader(fin)
+        reader = csv.reader(fin,delimiter="ª")
         label = next(reader)
 
         for row in reader:
@@ -52,10 +52,10 @@ def main():
     print(f"saving on {sys.argv[3]}...")
     with open ( sys.argv[3],"a") as fou:
 
-        fou.write(','.join(label) + '\n')
+        fou.write('ª'.join(label) + '\n')
 
         for row in new_data:
-            fou.write(','.join(row) + '\n')
+            fou.write('ª'.join(row) + '\n')
 
 
 if __name__ == "__main__":

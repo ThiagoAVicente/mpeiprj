@@ -7,6 +7,8 @@ function res = NAIVEBAYES_classify(review,prior,vocabulary,loglikelihood,classes
     probs(1) = log(prior(1));
     probs(2) = log(prior(2));
 
+    review = NAIVEBAYES_prepare(review);
+
     tokens = split(review,' ');
 
     % get tokens of review
