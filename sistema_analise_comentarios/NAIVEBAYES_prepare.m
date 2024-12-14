@@ -19,11 +19,11 @@ function response = NAIVEBAYES_prepare(mssg)
         ,' ');
 
     % remove non alpha-numerics from each part but keep punctuation still
-    parts = regexprep(parts, '[^a-zA-Z0-9.,!?;:]', '');
+    parts = regexprep(parts, '[^a-zA-Z.,!?;:]', '');
     
     % negation words [TODO] add more
     negationWords = { ...
-    'no', 'not', 'none', 'never', 'nowhere', 'nothing', ...
+    'not', 'none', 'never', 'nowhere', 'nothing', ...
     'nobody', 'dont', 'doesnt', 'didnt', 'cant', 'cannot', ...
     'couldnt', 'wont', 'wouldnt', 'shouldnt', 'isnt', 'arent', ...
     'wasnt', 'werent', 'havent', 'hasnt', 'hadnt', 'without' ...
@@ -38,6 +38,12 @@ function response = NAIVEBAYES_prepare(mssg)
        
         word = parts{i};
         clean_word = regexprep(word,'[.,!?;:]','');
+        
+        if isempty(clean_word)
+            
+            negate = false;
+            continue
+        end
 
         % check if it is a negation word
         if isKey( ...
@@ -56,6 +62,7 @@ function response = NAIVEBAYES_prepare(mssg)
             % if length isnt equal then  punctuation was removed 
             if length(word) ~= length(clean_word) 
                 negate = false;
+                
             end
             continue
         end

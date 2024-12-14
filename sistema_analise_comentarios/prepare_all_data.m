@@ -1,6 +1,6 @@
 clear
 clc
-
+tic
 %% NAIVE BAYES --- likelihood  vocabulary minsizeBoW classes prior
 
 data = readcell("train_15000.csv",Delimiter='ª');
@@ -19,13 +19,14 @@ tokenizedReviews = cellfun(@(x) cellstr( ...
                     NAIVEBAYES_prepare(x)) ...
             )), ...
             train_reviews, 'UniformOutput', false);
+tokenizedReviewsFlatten = [tokenizedReviews{:}];
 
 %% create a limited vocabulary
 
 % filter words to have 3 or more letters
-allWords = tokenizedReviews(cellfun(@(x) length(x)>minSize-1,tokenizedReviews ) );
+allWords = tokenizedReviewsFlatten(cellfun(@(x) length(x)>minSize-1,tokenizedReviewsFlatten ) );
 % get unique words
-vocabulary = unique([allWords{:}]);
+vocabulary = unique(allWords);
 
 %% BoW
 vocabMap = containers.Map(vocabulary, 1:numel(vocabulary));
@@ -193,3 +194,4 @@ delete(wb)
 %% save data
 save("save/data.mat","bloom_filter","MH","R","reviews","shingle_size", ...
             "users","vocabulary","loglikelihood","indices","prior","classes","minSize","counting_bloom_filter")
+toc

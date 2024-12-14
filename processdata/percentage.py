@@ -15,10 +15,9 @@ def main():
     with open( file, "r") as fin:
         reader = csv.reader(fin,delimiter="ª")
         next(reader)
-        i = 1
+
         for row in reader:
             #print(row)
-            i+=1
             values.append( int(row[column]) )
 
     unique = set(values)

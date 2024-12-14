@@ -11,12 +11,12 @@ numReviews = length(reviews);
 
 y = cell2mat( testData(:,3));
 %% classify 
-
+inds = [];
 true_positives = 0;
 false_positives = 0;
 true_negatives = 0;
 false_negatives = 0;
-
+h = waitbar(0, 'Naive Bayes...');
 for review_i = 1:numReviews
     
     probs = zeros(1,length(classes));
@@ -26,6 +26,7 @@ for review_i = 1:numReviews
     % get tokens of review
     review = (reviews{review_i});
     review = char(review);
+    review = NAIVEBAYES_prepare(review);
 
     res = NAIVEBAYES_classify(review,prior,vocabulary,loglikelihood,classes,minSize);
 
@@ -46,14 +47,23 @@ for review_i = 1:numReviews
         % false positive
         if res == classes(2)
             false_positives = false_positives+1;
+            inds(end+1) = review_i;
+            
         % false negative
         else
             false_negatives = false_negatives+1;
+            inds(end+1) = review_i;
         end
 
 
     end
+    if mod(review_i, 100) == 0
+        waitbar(review_i / numReviews, h);
+    end
+
 end
+close(h);
+
 %%
 precision = true_positives/(true_positives+false_positives);
 recall = true_positives/(true_positives+false_negatives);

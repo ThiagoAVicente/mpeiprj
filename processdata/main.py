@@ -106,17 +106,17 @@ def prepare_data(data):
     i = 0
     for row in data:
         i+=1
-        rating = int(row[2])
+        rating = int(row[6])
 
         new_row = row
         score = 0
 
-        if rating > 3:
+        if rating >= 3:
             score = 1
 
-        new_row[1] = row[1].replace("ª","")
+        new_row[5] = row[5].replace("ª","")
         #print(score)
-        new_row[2] = str(score)
+        new_row[6] = str(score)
 
         if score == 0:
             new_data.append(new_row)
