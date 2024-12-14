@@ -1,4 +1,4 @@
-function hc = hashFunction2(elemento,hf)
+function hc = hashFunctions2(elemento,hf)
 
 size = length(elemento);
 

@@ -6,7 +6,7 @@ classdef FILTROBLOOM_class
     %Para isso são usadas funções de hash e uma hash table
  
     properties
-        hashTable; %tabela em si
+        array; %tabela em si
         nmrOfElements; %nmr de elementos já colocados
         nmrOfFunctions; %nmr de funcoes de hash
         sizeOfTable; % tamanho da hash table(quantos "lugares" tem a tabela)
@@ -16,10 +16,10 @@ classdef FILTROBLOOM_class
     methods
         function obj = FILTROBLOOM_class(n ,k)
             %Construtor da classe FiltroBloomString
-            %Cria um filtroBloom com uma hashTable
+            %Cria um filtroBloom com uma array
             %com n lugares livres e vai usar k funções de hash
 
-            obj.hashTable = zeros(n, 1);
+            obj.array = zeros(n, 1);
             obj.sizeOfTable = n;
             obj.nmrOfElements = 0;
             obj.nmrOfFunctions = k;
@@ -28,14 +28,14 @@ classdef FILTROBLOOM_class
 
         function obj = addElement(obj, element)
             %AddElement
-            %   Adds imput to the bloomFilter, it uses obj.nmrOfFunctions hash functions to put value on hashTable
+            %   Adds imput to the bloomFilter, it uses obj.nmrOfFunctions hash functions to put value on array
             
              obj.nmrOfElements = obj.nmrOfElements + 1;            
              element = convertStringsToChars(element);
 
              for i = 1:obj.nmrOfFunctions
                 hashcode = mod(FILTROBLOOM_hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
-                obj.hashTable(hashcode) = 1;
+                obj.array(hashcode) = 1;
              end
 
         end
@@ -59,7 +59,7 @@ classdef FILTROBLOOM_class
             
             for i = 1:obj.nmrOfFunctions
                hashcode = mod(FILTROBLOOM_hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;
-               if obj.hashTable(hashcode) == 0
+               if obj.array(hashcode) == 0
                    isIn = 0;
                    return
                end

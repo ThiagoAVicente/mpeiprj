@@ -12,7 +12,7 @@ for j = 1:length(elementos)
 
     codes = zeros(1, 30);
     for i = 1:k
-        hascode = hashFunctions(elemento, matrixPrime, i);
+        hascode = COUNTINGBF_hashFunctions(elemento, matrixPrime, i);
         codes(i) = hascode;
     end
     subplot(2,3, j);

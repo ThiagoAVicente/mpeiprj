@@ -25,7 +25,7 @@ for i = 1:m
     if( (ismember(user, userPassed) == false) )
         userPassedC = userPassedC + 1;
         userPassed{userPassedC} = user;
-        hashcodes(userPassedC) = hashFunctions(user, 31, 1);
+        hashcodes(userPassedC) = COUNTINGBF_hashFunctions(user, 31, 1);
     end
 
     howManyValidUsers = howManyValidUsers + 1;
