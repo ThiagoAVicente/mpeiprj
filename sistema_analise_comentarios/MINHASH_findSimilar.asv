@@ -27,7 +27,7 @@ function similar = MINHASH_findSimilar(item,shingle_size,MH,threshold,R)
             R.k;
         
         % if jaccard similarity is greater or equal threshold
-        if j >= threshold
+        if j  threshold
             similar = [similar column_i];
         end
 

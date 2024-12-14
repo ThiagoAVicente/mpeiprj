@@ -11,9 +11,11 @@ function [Set,indices] = MINHASH_genSetOfShingles(data,shingle_size)
     for row_i = 1:numRows
         
         % get sentence
-        sentence = string(...
+        sentence_raw = string(...
             data{row_i});
-        
+        sentence_raw = lower(sentence_raw);
+        sentence = regexprep(sentence_raw,'[^a-zA-Z.,!?;: ]','');
+
         len = strlength(sentence);
         % if length of the row is less than shingle size then skip it
         if len < shingle_size
@@ -23,10 +25,11 @@ function [Set,indices] = MINHASH_genSetOfShingles(data,shingle_size)
         indices(end+1) = row_i;
         % else for each shilgle
         char_sentence = char(sentence);
-
+      
         Set{end+1} = {};
         for shingle_ind = 1:len-shingle_size+1
             % add shilgle to the Set 
+            
             Set{now} = [Set{now} char_sentence(shingle_ind:shingle_ind+shingle_size-1)];
         end
 

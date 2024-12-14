@@ -132,16 +132,15 @@ clear numShingles
 flattenedShingles = '';
 
 % for each line of shingles
-for i = 1:length(shingles)
-    line_shingles =  shingles{i};
+for i = 43
     
-    
-    for j = 1:length(line_shingles)
+    line_shingles =  shingles{i}
+    for j = length(line_shingles)
 
         shingle = line_shingles{j};
 
         if strncmp( shingle, 'idio',4)
-            disp('douun')
+            disp(slice)
         end
     
         % join shingle to flattenedShingles
@@ -157,7 +156,7 @@ unique_shingles = unique(all_shingles);
 %% create bloomfilter
 
 m = length(unique_shingles); 
-n = m * 20;
+n = m * 100;
 
 % kótimo
 k = floor(n*log10(2) / m); 
@@ -179,7 +178,7 @@ delete(wb)
 %% COUNTING BLOOM FILTER --- counting bloom filter with users name
 
 m = length(users); %quantos elementos vao ser adicionados
-n = m * 20; % tamanho do filtro
+n = length(users) * 100; % tamanho do filtro
 
 k = floor(n*log10(2) / m);
 %% create counting bf

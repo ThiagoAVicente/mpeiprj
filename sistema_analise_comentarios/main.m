@@ -4,7 +4,7 @@ clc
 load("save/data.mat")
 
 %% search for comments
-toSearch = 'error';
+toSearch = 'application';
 
 %% check if any shingle is in the dataset
 
@@ -36,7 +36,7 @@ similar = [];
 if response == 0
     return
 end
-threshold = 0.7; % jacard distance 
+threshold = 0.5; % jacard sim
 similar = MINHASH_findSimilar(toSearch,...
                 shingle_size,MH, ...
                 threshold,R);
@@ -47,7 +47,7 @@ for i = indices(similar)
 end
 
 %% usar naive bayes para classificar
-line = 2;
+line = 1;
 review = reviews{...
             indices( ...
             similar(line) ...

@@ -83,7 +83,7 @@ function processData(search_bar,threshold_slider,output_field,users, ...
     % check if any shingle is in bloom_filter
     response = false;
     count = 0;
-    minimum = 1;
+    minimum = 0;
     for i =1:length(shingles)
         
         shingle = shingles{i};
