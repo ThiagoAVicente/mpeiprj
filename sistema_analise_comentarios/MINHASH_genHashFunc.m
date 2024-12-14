@@ -1,6 +1,5 @@
 function R =  MINHASH_genHashFunc(k)
     % returns struct with params for hashfunctions
-    % thiago vicente - 121497
 
     R = struct;
     

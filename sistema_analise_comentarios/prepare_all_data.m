@@ -128,36 +128,9 @@ clear numShingles
 
 %% BLOOMFILTER --- bloomfilter
 
-% join all shingles
-flattenedShingles = '';
 
-% for each line of shingles
-for i = 1:length(shingles)
-    line_shingles =  shingles{i};
-    
-    
-    for j = 1:length(line_shingles)
-
-        shingle = line_shingles{j};
-
-        if strncmp( shingle, 'idio',4)
-            disp('douun')
-        end
-    
-        % join shingle to flattenedShingles
-        flattenedShingles = [flattenedShingles ';' shingle ];
-    end
-end
-
-% split on ' '
-all_shingles = split(flattenedShingles,';');
-%%
-% get unique words
-unique_shingles = unique(all_shingles);
-%% create bloomfilter
-
-m = length(unique_shingles); 
-n = m * 20;
+m = length(vocabulary); 
+n = m * 100;
 
 % kótimo
 k = floor(n*log10(2) / m); 
@@ -168,8 +141,8 @@ wb = waitbar(0, "bloom filter...");
 
 for i = 1:m
     
-    shingle = unique_shingles{i};
-    bloom_filter = bloom_filter.addElement(shingle); %adiciona o shingle ao filtro
+    word = vocabulary{i};
+    bloom_filter = bloom_filter.addElement(word); %adiciona o shingle ao filtro
     
     waitbar(i/m);
 end
@@ -179,7 +152,7 @@ delete(wb)
 %% COUNTING BLOOM FILTER --- counting bloom filter with users name
 
 m = length(users); %quantos elementos vao ser adicionados
-n = m * 20; % tamanho do filtro
+n = m * 100; % tamanho do filtro
 
 k = floor(n*log10(2) / m);
 %% create counting bf

@@ -22,7 +22,7 @@ search_bar = uieditfield(window,'text','Position',[5 560 width-5 30 ]);
 threshold_slider = uislider(window,'Position',[50 530 90 3], ...
     'Limits', [0, 1], 'Value', 0.5,'MajorTicks', [],'MinorTicks',[]);
 threshold_label = uilabel(window, 'Position', [150 515 100 30], ...
-    'Text', ['threshold: ', num2str(threshold_slider.Value)]);
+    'Text', ['semelhança: ', num2str(threshold_slider.Value)]);
 naivebayes_label = uilabel(window, 'Position', [300 515 400 30], ...
     'Text', 'Naive Bayes: selecione um comentário','FontSize', 16);
 
@@ -77,32 +77,24 @@ function processData(search_bar,threshold_slider,output_field,users, ...
         return
     end
 
-    [shingles,~] = MINHASH_genSetOfShingles({toSearch},shingle_size);
-    shingles = shingles{1};
-    
-    % check if any shingle is in bloom_filter
+    % use bloom filter to check if any word in search bar is in dataset
+    words = split(lower(toSearch),' ');
+    minimum = 1;
     response = false;
     count = 0;
-    minimum = 0;
-    for i =1:length(shingles)
-        
-        shingle = shingles{i};
-        if bloom_filter.checkElement(shingle)
-            
+    for i = 1:length(words)
+        if bloom_filter.checkElement(words{i})
             count = count+1;
-            if count < minimum
-                continue
+            if count >= minimum
+                response = true;
+                break
             end
-            
-            response = true;
-            break
         end
-    
     end
-    
+
     % if exists them find similars using minhash
-    if response == 0
-        output_field.Items = {'Filtro bloom: nenhum comentário com esses shingles'};
+    if response == false
+        output_field.Items = {'Filtro bloom: nenhum comentário com essas palavras'};
         return
     end
     similar = MINHASH_findSimilar(toSearch,...
