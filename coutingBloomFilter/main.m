@@ -11,7 +11,7 @@ clear wb
 
 wb = waitbar(0, "Creating Bloom Filter");
 
-limiar = 5; %limiar que o filtroBloomCounter apanha
+limiar = 2; %limiar que o filtroBloomCounter apanha
 
 m = length(userNames); %quantos elementos vao ser adicionados
 n = length(userNames) * 100; % tamanho do filtro
@@ -25,14 +25,16 @@ clear wb
 
 wb = waitbar(0, "Putting users in bloom filter");
 
+isMissing = 0;
 userRepeatedMoreThanLimiar = 0; %variavel que guarda quantos nomes repetidos mais vezes que o limiar
 for i = 1:m
    
     user = userNames{i};
 
     if isa(user, 'missing') %no dataset pode haver linhas sem user name
-        continue            %entao este if faz com que o programa nao "morra"
-    end                     %caso haja uma linha sem username
+        isMissing = isMissing + 1; %entao este if faz com que o programa nao "morra"
+        continue            %caso haja uma linha sem username
+    end                     
 
     filtroBloomUsers = filtroBloomUsers.addElement(user);
     waitbar(i/m);
@@ -51,6 +53,10 @@ for i = 1:m
     if isa(user, 'missing') %no dataset pode haver linhas sem user name
         continue            %entao este if faz com que o programa nao "morra"
     end                     %caso haja uma linha sem username
+    
+    if isa(user, "double")
+        user = convertStringsToChars(int2str(user));
+    end
 
     if( filtroBloomUsers.isRepeatedLessThan(user, limiar) == 1 && (ismember(user, repeatedUsers) == false)) %nao contar mais que uma vez os repetidos
         repeatedUsersCounter = repeatedUsersCounter + 1;
