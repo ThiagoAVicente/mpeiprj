@@ -3,7 +3,7 @@ clc
 
 wb = waitbar(0 ,"Load file");
 
-load("save/output.mat")
+load("save/bloomFilter.mat")
 
 waitbar(100);
 delete(wb)

@@ -125,7 +125,7 @@ shingle_size = 4;
 [shingles,indices] = MINHASH_genSetOfShingles(reviews,shingle_size);
 
 %% hash function
-R = MINHASH_genHashFunc(50);
+R = MINHASH_genHashFunc(20);
 
 %% minhash matrice
 MH = MINHASH_genMH(shingles,R);

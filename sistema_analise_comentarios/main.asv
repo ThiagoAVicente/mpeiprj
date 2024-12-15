@@ -7,15 +7,14 @@ load("save/data.mat")
 toSearch = 'good';
 % limit of similar itens to show
 limit = 10;
-threshold = 0.5; % jacard sim
 
-%% MINHASH e BLOOMFILTER
+%% MINHASH e BLOOM
 % check if any shingle is in the dataset
 
 [shingles,~] = MINHASH_genSetOfShingles({toSearch},shingle_size);
 shingles = shingles{1};
 
-% check if any shingle is in bloom_filter
+%% check if any shingle is in bloom_filter
 response = false;
 count = 0;
 minimum = 1;
@@ -35,17 +34,17 @@ for i =1:length(shingles)
 
 end
 
-% if exists them find similars using minhash
+%% if exists them find similars using minhash
 similar = [];
 if response == 0
     disp("Nenhuma dessas palavras encontra-se no dataset")
     return
 end
-
+threshold = 0.5; % jacard sim
 similar = MINHASH_findSimilar(toSearch,...
                 shingle_size,MH, ...
                 threshold,R);
-% display similar
+%% display similar
 disp("Similar comments: ")
 for i = indices(similar(1:limit))
     fprintf("%s: %s\n",users{i},reviews{i});
@@ -53,7 +52,7 @@ for i = indices(similar(1:limit))
 end
 
 %% NAIVE BAYES
-line = 1; % selected line
+line = 1;
 review = reviews{...
             indices( ...
             similar(line) ...
@@ -61,7 +60,7 @@ review = reviews{...
 
 review = NAIVEBAYES_prepare(review);
 
-% calcular probabilidades
+%% calcular probabilidades
 predicted_class = NAIVEBAYES_classify(review,prior,vocabulary,loglikelihood,classes,minSize);
 response = "(1,2)";
 if predicted_class == classes(2)
@@ -79,8 +78,7 @@ user = users{...
 possibleNumOfComments = counting_bloom_filter.howMany(user);
 fprintf("O usuário pode ter %d comentário(s).\n",possibleNumOfComments);
 disp("\n")
-
-% filter users based on number of comments
+%% filtro bloom
 limiar = input("\nQual o número de comentários quer filtrar? ");
 numberOfUserNames = length(users);
 
