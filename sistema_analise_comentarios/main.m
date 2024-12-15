@@ -4,7 +4,7 @@ clc
 load("save/data.mat")
 
 %% SEARCH
-toSearch = 'application';
+toSearch = 'die ';
 
 %% check if any shingle is in the dataset
 
@@ -37,7 +37,7 @@ if response == 0
     disp("Nenhuma dessas palavras encontra-se no dataset")
     return
 end
-threshold = 0.5; % jacard sim
+threshold = 0.05; % jacard sim
 similar = MINHASH_findSimilar(toSearch,...
                 shingle_size,MH, ...
                 threshold,R);

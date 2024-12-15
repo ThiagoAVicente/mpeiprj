@@ -116,7 +116,7 @@ clear vocabMap tokenizedReviews tokens train_reviews WordsCountBad WordsCountGoo
 %% change data file
 data = readcell(['test_' dataset '.csv'],Delimiter='ª');
 reviews = data(:,2);
-users = data(2:end,1);
+users = data(:,1);
 users(cellfun(@(x) isa(x, 'missing'), users)) = {'unknown'};
 %% MINHASH  --- users reviews indices MH
 
