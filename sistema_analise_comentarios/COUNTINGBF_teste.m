@@ -3,7 +3,7 @@ clc
 
 wb = waitbar(0 ,"Load file");
 
-load("save/data.mat")
+load("save/output.mat")
 
 waitbar(100);
 delete(wb)
@@ -11,7 +11,7 @@ clear wb
 
 wb = waitbar(0, "Creating Bloom Filter");
 
-limiar = 5; %limiar que o filtroBloomCounter apanha
+limiar = 2; %limiar que o filtroBloomCounter apanha
 
 m = length(users); %quantos elementos vao ser adicionados
 n = 287552; % tamanho do filtro

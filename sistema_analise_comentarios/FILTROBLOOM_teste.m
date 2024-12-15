@@ -11,8 +11,8 @@ clear wb
 
 wb = waitbar(0, "Creating Bloom Filter");
 
-m = length(userNames); %quantos elementos vao ser adicionados
-n = length(userNames) * 100; % tamanho do filtro
+m = length(users); %quantos elementos vao ser adicionados
+n = length(users) * 100; % tamanho do filtro
 
 k = floor(n*log10(2) / m); % calcular k otimo (k = funcoes de hash que vao ser usadas)
 filtroBloomUsers = FILTROBLOOM_class(n, k); %criar filtro bloom
@@ -27,7 +27,7 @@ userRepeated = 0; %variavel que guarda quantos nomes repetidos
 counter = 1;
 for i = 1:m
     
-    name = userNames{i};
+    name = users{i};
     
     if isa(name, 'missing') %no dataset pode haver linhas sem user name
         continue            %entao este if faz com que o programa nao "morra"
