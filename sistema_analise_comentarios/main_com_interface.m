@@ -81,7 +81,7 @@ function processData(search_bar,threshold_slider,output_field,users, ...
     % use bloom filter to check if any word in search bar is in dataset
     words = split(lower(toSearch),' ');
     words = words(strlength(words) > 0); 
-    disp(words)
+    %disp(words)
     minimum = 1;
     response = false;
     count = 0;
@@ -108,9 +108,7 @@ function processData(search_bar,threshold_slider,output_field,users, ...
     similarItems = {};
     disp(similar)
     for i = indices(similar)
-        if i > users{i}
-            disp(i)
-        end
+
         similarItems{end+1} = sprintf('%s: %s', users{i}, reviews{i});
     end
     output_field.Items = similarItems;
