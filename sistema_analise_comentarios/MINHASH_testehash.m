@@ -28,7 +28,7 @@ length(unique(hashCodes))
 % pllot
 counts = accumarray(hashCodes' + 1, 1);
 stem(counts,"Marker","none")
-title("Distribuição dos hashcodes com 28000 shingles diferentes")
+title(['Distribuição dos hashcodes com ' string(length(Set_flatten)) 'shingles diferentes'])
 ylabel("Número de atribuições")
 
 

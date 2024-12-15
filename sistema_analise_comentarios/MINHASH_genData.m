@@ -18,3 +18,5 @@ R = MINHASH_genHashFunc(5);
 
 %% minhash matrice
 MH = MINHASH_genMH(shingles,R);
+
+save("save/minHash.mat","MH","R","reviews","shingle_size","users","indices")

@@ -1,14 +1,18 @@
-% thiago vicente - 121497
+
 %% load data
 clear
 clc
-load("save/data.mat")
+load("save/minHash.mat")
 
 %% find similar
 threshold = 0.5; % similaridade
 similar = MINHASH_findSimilar('horrible',...
                     shingle_size,MH, ...
                     threshold,R);
+
+if isempty(similar)
+    disp("Nenhum similar")
+end
 
 % remove missing values
 users(cellfun(@(x) isa(x, 'missing'), users)) = {'unknown'};
