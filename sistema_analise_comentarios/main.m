@@ -4,8 +4,8 @@ clc
 load("save/data.mat")
 
 %% SEARCH
-toSearch = 'die ';
-
+toSearch = 'good';
+limit = 10;
 %% check if any shingle is in the dataset
 
 [shingles,~] = MINHASH_genSetOfShingles({toSearch},shingle_size);
@@ -37,12 +37,13 @@ if response == 0
     disp("Nenhuma dessas palavras encontra-se no dataset")
     return
 end
-threshold = 0.05; % jacard sim
+threshold = 0.5; % jacard sim
 similar = MINHASH_findSimilar(toSearch,...
                 shingle_size,MH, ...
                 threshold,R);
 %% display similar
-for i = indices(similar)
+disp("Similar comments: ")
+for i = indices(similar(1:limit))
     fprintf("%s: %s\n",users{i},reviews{i});
 
 end
@@ -62,8 +63,18 @@ response = "(1,2)";
 if predicted_class == classes(2)
     response = "(4,5)";
 end
-fprintf("Pedicted class was %s",response);
+disp("\n")
+fprintf("Pedicted class was %s.\n",response);
 
+%% COUNTING BLOOM FILTER
+user = users{...
+            indices( ...
+            similar(line) ...
+            )};
+
+possibleNumOfComments = counting_bloom_filter.howMany(user);
+fprintf("O usuário pode ter %d comentário(s).\n",possibleNumOfComments);
+disp("\n")
 %% filtro bloom
 limiar = input("\nQual o número de comentários quer filtrar? ");
 numberOfUserNames = length(users);

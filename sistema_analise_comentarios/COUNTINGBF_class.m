@@ -70,12 +70,12 @@ classdef COUNTINGBF_class
 
         end
 
-        function num = howMany(obj,element)
+        function times = howMany(obj,element)
         % function checks how many times an element is in the obj
         % this can be achieved by checking the min value
 
         % number of times, then it will be updated by min value
-        times =  mod(COUNTINGBF_hashFunctions(element,obj.matrixPrime,1), obj.sizeOfTable) + 1;
+        times =  mod(COUNTINGBF_hashFunctions(element,obj.matrixPrime,1), obj.sizeOfTable);
 
         for i = 2:obj.nmrOfFunctions
         hashcode = mod(COUNTINGBF_hashFunctions(element,obj.matrixPrime,i), obj.sizeOfTable) + 1;

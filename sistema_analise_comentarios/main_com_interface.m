@@ -29,11 +29,14 @@ threshold_label = uilabel(tab1, 'Position', [150 515 100 30], ...
     'Text', ['semelhança: ', num2str(threshold_slider.Value)]);
 naivebayes_label = uilabel(tab1, 'Position', [300 515 400 30], ...
     'Text', 'Naive Bayes: selecione um comentário','FontSize', 16);
+countingbf_label = uilabel(tab1, 'Position', [300 530 500 30], ...
+    'Text', 'Counting bloom filter: selecione um comentário','FontSize', 16);
 
 output = uilistbox(tab1, 'Position', [25, 25, width-50, height-(height-515+25)], ...
     'Multiselect', 'off','FontSize', 14, ...
     'ValueChangedFcn', @(src, event) ...
-    naiveBayesCalculation(src,naivebayes_label,prior,vocabulary,loglikelihood,classes,minSize));
+    naiveBayes_countingfilter(src,naivebayes_label,prior, ...
+                    vocabulary,loglikelihood,classes,minSize,counting_bloom_filter,countingbf_label));
 
 output.Items = {};
 
@@ -41,29 +44,33 @@ output.Items = {};
 limiarLabel = uilabel(tab2, 'Position', [10 height-80 400 30], ...
     'Text', 'Quantos comentários no minimo tem o utilizador?','FontSize', 14);
 limiarInput = uieditfield(tab2,'numeric','Position',[350 height-80 100 30 ]);
-usersLabel = uilabel(tab2, 'Position', [10 height-120 400 30], ...
-    'Text', ['Usuaŕios com menos de ', num2str(limiarInput.Value)],'FontSize', 14);
+%usersLabel = uilabel(tab2, 'Position', [10 height-120 400 30], ...
+%    'Text', ['Usuaŕios com menos de ', num2str(limiarInput.Value)],'FontSize', 14);
 outputFiltro = uilistbox(tab2, 'Position', [25, 25, width-50, height-(height-515+25)]);
 outputFiltro.Items = {};
 %% first tab backend
 % when a list element is selected calculate the naive bayes prediction to
 % the review
-function naiveBayesCalculation(selected,naivebayes_label,prior,vocabulary,loglikelihood,classes,minSize)
+function naiveBayes_countingfilter(selected,naivebayes_label,prior,vocabulary ...
+                                ,loglikelihood,classes,minSize,counting_bloom_filter,countingbf_label)
     
     % separe review from user
-    review = selected.Value;
-    review = split(review,': ');
+    input = selected.Value;
+    parts = split(input,': ');
     
     % validate if there is a comment
-    if length(review) < 2
+    if length(parts) < 2
         return
     end
     
-    review = review{2};
-    if isempty(review)
+    review = parts{2};
+    user = parts{1};
+
+    if isempty(review) || isempty(user)
         return
     end
     
+    %% NAIVE BAYES
     % classify with naive bayes
     predicted_class = NAIVEBAYES_classify(review,prior,vocabulary,loglikelihood,classes,minSize);
     response = '(1,2)';
@@ -74,6 +81,10 @@ function naiveBayesCalculation(selected,naivebayes_label,prior,vocabulary,loglik
     % display response
     naivebayes_label.Text = ['Naive Bayes: ' response];
 
+    %% COUNTING BLOOM FILTER
+    possibleNumOfComments = counting_bloom_filter.howMany(user);
+    countingbf_label.Text = ['Counting bloom filter ' num2str(possibleNumOfComments) ' comentários (?)'];
+    
 end
 
 % on update searchbar call all fucntions
@@ -91,6 +102,7 @@ function processData(search_bar,threshold_slider,output_field,users, ...
         return
     end
 
+    %% BLOOM FILTER
     % use bloom filter to check if any word in search bar is in dataset
     words = split(lower(toSearch),' ');
     words = words(strlength(words) > 0); 
@@ -114,12 +126,12 @@ function processData(search_bar,threshold_slider,output_field,users, ...
         return
     end
 
-    % MINHASH
+    %% MINHASH
     similar = MINHASH_findSimilar(toSearch,...
                     shingle_size,MH, ...
                     threshold,R);
     similarItems = {};
-    disp(similar)
+    %disp(similar)
     for i = indices(similar)
 
         similarItems{end+1} = sprintf('%s: %s', users{i}, reviews{i});

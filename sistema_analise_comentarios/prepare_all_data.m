@@ -125,7 +125,7 @@ shingle_size = 4;
 [shingles,indices] = MINHASH_genSetOfShingles(reviews,shingle_size);
 
 %% hash function
-R = MINHASH_genHashFunc(5);
+R = MINHASH_genHashFunc(50);
 
 %% minhash matrice
 MH = MINHASH_genMH(shingles,R);
@@ -167,8 +167,7 @@ counting_bloom_filter = COUNTINGBF_class(n,k);
 wb = waitbar(0, "counting bloom filter...");
 
 for i = 1:length(users)
-    user = lower( ...
-        users{i});
+    user = users{i};
     counting_bloom_filter = counting_bloom_filter.addElement(user);
     waitbar(i/m);
 end
