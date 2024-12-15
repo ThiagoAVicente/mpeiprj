@@ -3,7 +3,7 @@ clear
 clc
 load("save/data.mat")
 
-%% search for comments
+%% SEARCH
 toSearch = 'application';
 
 %% check if any shingle is in the dataset
@@ -34,6 +34,7 @@ end
 %% if exists them find similars using minhash
 similar = [];
 if response == 0
+    disp("Nenhuma dessas palavras encontra-se no dataset")
     return
 end
 threshold = 0.5; % jacard sim
@@ -46,7 +47,7 @@ for i = indices(similar)
 
 end
 
-%% usar naive bayes para classificar
+%% NAIVE BAYES
 line = 1;
 review = reviews{...
             indices( ...

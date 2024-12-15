@@ -1,11 +1,14 @@
 %% laod data
 clear
 clc
-load("save/data.mat")
+load("save/naiveBayes.mat")
+
+dataset = '5000';
+%dataset = '15000';
 
 %%
 
-testData = readcell("test_5000.csv",Delimiter='ª');
+testData = readcell(['test_' dataset '.csv'],Delimiter='ª');
 reviews = testData(:,2);
 numReviews = length(reviews);
 
