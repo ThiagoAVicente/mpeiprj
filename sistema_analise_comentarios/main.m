@@ -67,8 +67,8 @@ response = "(1,2)";
 if predicted_class == classes(2)
     response = "(4,5)";
 end
-disp("\n")
-fprintf("Pedicted class was %s.\n",response);
+disp("")
+fprintf("Naive Bayes: %s.\n",response);
 
 %% COUNTING BLOOM FILTER
 user = users{...
@@ -78,7 +78,7 @@ user = users{...
 
 possibleNumOfComments = counting_bloom_filter.howMany(user);
 fprintf("O usuário pode ter %d comentário(s).\n",possibleNumOfComments);
-disp("\n")
+disp("")
 
 % filter users based on number of comments
 limiar = input("\nQual o número de comentários quer filtrar? ");
