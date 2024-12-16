@@ -121,6 +121,9 @@ for i = 1:numberOfUserNames
 
 end
 
+if repeatedUsersCounter > limit
+    repeatedUsersCounter = limit;
+end
 disp("Usuarios repetidos " + limiar + " vezes ou mais: ");
 for i = 1:repeatedUsersCounter
     userName = repeatedUsers{i};
