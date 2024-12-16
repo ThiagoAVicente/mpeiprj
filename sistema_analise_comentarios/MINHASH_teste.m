@@ -5,8 +5,8 @@ clc
 load("save/minHash.mat")
 
 %% find similar
-threshold = 0.5; % similaridade
-similar = MINHASH_findSimilar('horrible',...
+threshold = 0.8; % similaridade
+similar = MINHASH_findSimilar('good app',...
                     shingle_size,MH, ...
                     threshold,R);
 

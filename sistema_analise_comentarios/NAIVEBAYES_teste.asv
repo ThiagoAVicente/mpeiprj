@@ -10,7 +10,6 @@ testData = readcell(['test_' dataset '.csv'],Delimiter='ª');
 reviews = testData(:,2);
 numReviews = length(reviews);
 y = cell2mat( testData(:,3));
-labels = y;
 %% teste com todos as linhas
 
 
@@ -77,23 +76,22 @@ fprintf("Accuracy: %.2f\nRecall: %.2f\nPrecision: %.2f\nF1: %.2f\n",accuracy,rec
 
 %% teste para fazer a média
 
-numTests = 5;
+numTests = 10;
 originalNumReviews = 5000;
 
 precision = 0;
 recall = 0;
 accuracy = 0;
 F1 = 0;
-batch_size = 500;
-all_pos = 1:originalNumReviews-batch_size-1;
-
+all_pos = 1:originalNumReviews-500;
 for i = 1:numTests
     kni = randsample(all_pos,1);
     all_pos(all_pos == kni) = [];
-    reviews = testData(kni:kni+batch_size-1,2);
-    y = labels(kni:kni+batch_size-1);
+    reviews = testData(kni:kni+500-1,2);
+    y = y(kni:kni+500-1);
     numReviews = length(reviews);
-   
+    kni = kni + 500;
+    y = cell2mat( testData(:,3));
     % classify 
     true_positives = 0;
     false_positives = 0;
