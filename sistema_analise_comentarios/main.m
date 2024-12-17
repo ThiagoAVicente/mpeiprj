@@ -4,10 +4,10 @@ clc
 load("save/data.mat")
 
 %% SEARCH
-toSearch = 'good ai';
+toSearch = 'love this';
 % limit of similar itens to show
 limit = 10;
-threshold = 0.8; % jacard sim
+threshold = 0.5; % jacard sim
 lsh = 1; % 1 para usar lsh
 %% MINHASH e BLOOMFILTER
 % check if any shingle is in the dataset
@@ -48,9 +48,14 @@ else
         shingle_size,MH, ...
         threshold,R);
 end
+
+disp("Similar comments: ")
+
+if isempty(similar)
+    return
+end
 % display similar
 last = min(limit,length(similar));
-disp("Similar comments: ")
 for i = indices(similar(1:last))
     fprintf("%s: %s\n",users{i},reviews{i});
 
