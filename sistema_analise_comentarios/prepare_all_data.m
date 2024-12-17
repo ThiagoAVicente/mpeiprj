@@ -3,8 +3,9 @@ clc
 tic
 
 %% DATASET
-dataset = '5000';
-%dataset = '15000';
+%dataset = '5000';
+dataset = '15000';
+p_falsos_positivos = 1e-4;
 
 %% NAIVE BAYES --- likelihood  vocabulary minsizeBoW classes prior
 
@@ -135,10 +136,9 @@ clear numShingles
 
 
 m = length(vocabulary); 
-n = m * 100;
 
-% kótimo
-k = floor(n*log10(2) / m); 
+[n,k] = getParams(m,p_falsos_positivos);
+ 
 bloom_filter = FILTROBLOOM_class(n,k);
 
 %% add words to filter
@@ -157,9 +157,8 @@ delete(wb)
 %% COUNTING BLOOM FILTER --- counting bloom filter with users name
 
 m = length(users); %quantos elementos vao ser adicionados
-n = m * 100; % tamanho do filtro
+[n,k] = getParams(m,p_falsos_positivos);
 
-k = floor(n*log10(2) / m);
 %% create counting bf
 counting_bloom_filter = COUNTINGBF_class(n,k);
 

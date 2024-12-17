@@ -11,9 +11,9 @@ function [n,k] = getParams(m,p)
 
     a = 1-exp(-log(2)); 
     
-    n = log(p)/log(a) * m/log(2);
+    n = round( log(p)/log(a) * m/log(2) );
 
     % kótimo
-    k = n*log(2)/m; 
+    k = round( n*log(2)/m ); 
     
 end
