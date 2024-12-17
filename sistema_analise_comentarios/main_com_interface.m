@@ -24,7 +24,7 @@ tab2 = uitab(tabGroup, "Title", "Filtrar utilizadores");
 %% first tab
 search_bar = uieditfield(tab1,'text','Position',[5 560 width-5 30 ]);
 threshold_slider = uislider(tab1,'Position',[50 530 90 3], ...
-    'Limits', [0.4, 1], 'Value', 0.5,'MajorTicks', [],'MinorTicks',[]);
+    'Limits', [0, 1], 'Value', 0.5,'MajorTicks', [],'MinorTicks',[]);
 threshold_label = uilabel(tab1, 'Position', [150 515 100 30], ...
     'Text', ['semelhança: ', num2str(threshold_slider.Value)]);
 naivebayes_label = uilabel(tab1, 'Position', [300 515 400 30], ...
@@ -104,7 +104,7 @@ function processData(search_bar,threshold_slider,output_field,users, ...
 
     %% BLOOM FILTER
     % use bloom filter to check if any word in search bar is in dataset
-    words = split(lower(toSearch),' ');
+     words = split(lower(toSearch),' ');
     words = words(strlength(words) > 0); 
     %disp(words)
     minimum = 1;

@@ -16,10 +16,6 @@ function similar = LSH_findSimilar(item,shingle_size, MH,threshold,R,LSH,D)
     b = size(D.a,1);
     LSH2 = LSH_genLSH(b,MH2,D);
     
-    if threshold == 0
-        similar = 1:size(MH,2);
-        return;
-    end
     
     similar = [];
     % compare to each element in MH
