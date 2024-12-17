@@ -1,70 +1,60 @@
 clear
 clc
 
-wb = waitbar(0 ,"Load file");
-
-load("save/bloomFilter.mat")
-
-waitbar(100);
-delete(wb)
-clear wb
-
 wb = waitbar(0, "Creating Bloom Filter");
 
-limiar = 2; %limiar que o filtroBloomCounter apanha
-
-m = length(users); %quantos elementos vao ser adicionados
+m = 15000; %quantos elementos vao ser adicionados
 n = 287552; % tamanho do filtro
 
-k = round(n*log(2) / m); % calcular k otimo (k = funcoes de hash que vao ser usadas)
+k = floor(n*log10(2) / m); % calcular k otimo (k = funcoes de hash que vao ser usadas)
 filtroBloomUsers = COUNTINGBF_class(n, k); %criar filtro bloom
 
 waitbar(100);
 delete(wb)
 clear wb
 
-wb = waitbar(0, "Putting users in bloom filter");
+caract = ['a':'z' 'A':'Z'];
+chaves = unique(geradorChaves(m, 4, 20, caract)); %gera chaves aleatorias
+chaves = [chaves, chaves, chaves]; %faz todas as chaves de repetirem 3 vezes
 
-isMissing = 0;
-userRepeatedMoreThanLimiar = 0; %variavel que guarda quantos nomes repetidos mais vezes que o limiar
+limiar = 3;
+wb = waitbar(0, "Add users");
+
+userRepeated = 0; %variavel que guarda quantos nomes repetidos
+counter = 1;
+userRepeatedCell = cell(0);
 for i = 1:m
-   
-    user = users{i};
-
-    if isa(user, 'missing') %no dataset pode haver linhas sem user name
-        isMissing = isMissing + 1; %entao este if faz com que o programa nao "morra"
-        continue            %caso haja uma linha sem username
-    end                     
-
-    filtroBloomUsers = filtroBloomUsers.addElement(user);
-    waitbar(i/m);
-end
-
-delete(wb)
-clear wb
-
-repeatedUsersCounter = 0;
-repeatedUsers = cell(0);
-wb = waitbar(0, "Checking repeated users");
-for i = 1:m
-
-    user = users{i};
-
-    if isa(user, 'missing') %no dataset pode haver linhas sem user name
+    
+    name = chaves{i};
+    
+    if isa(name, 'missing') %no dataset pode haver linhas sem user name
         continue            %entao este if faz com que o programa nao "morra"
     end                     %caso haja uma linha sem username
     
-    if isa(user, "double")
-        user = convertStringsToChars(int2str(user));
-    end
-
-    if( filtroBloomUsers.isRepeatedLessThan(user, limiar) == 1 && (ismember(user, repeatedUsers) == false)) %nao contar mais que uma vez os repetidos
-        repeatedUsersCounter = repeatedUsersCounter + 1;
-        repeatedUsers{repeatedUsersCounter} = user;
-    end
-
+    filtroBloomUsers = filtroBloomUsers.addElement(name); %adiciona o userName ao filtro
     waitbar(i/m);
 end
 
 delete(wb)
 clear wb
+
+wb = waitbar(0, "Checking");
+for i = 1:m
+    
+    name = chaves{i};
+    
+    if isa(name, 'missing') %no dataset pode haver linhas sem user name
+        continue            %entao este if faz com que o programa nao "morra"
+    end                     %caso haja uma linha sem username
+    
+    if ( filtroBloomUsers.isRepeatedLessThan(name, limiar) == 1 && (ismember(name, userRepeatedCell) == false)) %limiar+1 para testar falsos positivos
+
+        userRepeated = userRepeated + 1; %adiciona o userName ao filtro
+        userRepeatedCell{userRepeated} = name;
+    end
+    waitbar(i/m);
+end
+delete(wb)
+clear wb
+
+disp("Para 15000 nomes gerados aleatoriamente houve " + userRepeated + " falsos positivos");
