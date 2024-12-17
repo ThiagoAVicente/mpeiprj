@@ -52,7 +52,7 @@ outputFiltro.Items = {};
 % when a list element is selected calculate the naive bayes prediction to
 % the review
 function naiveBayes_countingfilter(selected,naivebayes_label,prior,vocabulary ...
-                                ,loglikelihood,classes,minSize,counting_bloom_filter,countingbf_label)
+                                ,loglikelihood,classes,minSize,counting_bloom_filter,countingbf_label,)
     
     % separe review from user
     input = selected.Value;
@@ -89,12 +89,12 @@ end
 
 % on update searchbar call all fucntions
 search_bar.ValueChangedFcn = @(src, event) processData(src,threshold_slider,output,users,reviews, ...
-    shingle_size,bloom_filter,MH,R,indices,LSH,D,mode);
+    shingle_size,bloom_filter,MH,R,indices,LSH,D);
 
 function processData(search_bar,threshold_slider,output_field,users, ...
-    reviews,shingle_size,bloom_filter,MH,R,indices,LSH,D,mode)
+    reviews,shingle_size,bloom_filter,MH,R,indices,LSH,D)
     % call bloomfilter, naive bayes and minhash
-    lsh = mode.Value;
+
     threshold = threshold_slider.Value;
     toSearch = search_bar.Value;
     if isempty(toSearch) || length(toSearch) < shingle_size
@@ -129,7 +129,6 @@ function processData(search_bar,threshold_slider,output_field,users, ...
     %% MINHASH
     
     if lsh 
-        %disp("LSH")
         similar = LSH_findSimilar(toSearch ...
         ,shingle_size, ...
         MH,threshold,R, ...

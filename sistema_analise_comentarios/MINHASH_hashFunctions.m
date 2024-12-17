@@ -4,7 +4,6 @@ function hc = MINHASH_hashFunctions(item, R, hf)
     %   https://www.geeksforgeeks.org/hash-functions-and-list-types-of-hash-functions/
     %   https://ieeexplore.ieee.org/document/1432664
     %   
-    % thiago vicente - 121497
 
     % use ascii values of item
     ASCII = char(item);
