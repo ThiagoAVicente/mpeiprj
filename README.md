@@ -34,7 +34,7 @@ O sistema permite:
 
 Aqui está uma representação gráfica do fluxo do sistema:
 
-![Exemplo do Sistema de Análise de Comentários](./caminho_para_a_imagem_exemplo.png)
+![Exemplo do Sistema de Análise de Comentários](./ex.png)
 
 ---
 
