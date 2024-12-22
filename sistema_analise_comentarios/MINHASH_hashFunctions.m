@@ -4,7 +4,6 @@ function hc = MINHASH_hashFunctions(item, R, hf)
     %   https://www.geeksforgeeks.org/hash-functions-and-list-types-of-hash-functions/
     %   https://ieeexplore.ieee.org/document/1432664
     %   
-    % thiago vicente - 121497
 
     % use ascii values of item
     ASCII = char(item);
@@ -12,7 +11,7 @@ function hc = MINHASH_hashFunctions(item, R, hf)
 
     % get binaries of the bin_vals
     for i = 1:length(ASCII)
-        bin_vals = [bin_vals, dec2bin(double(ASCII(i)), 7)];
+        bin_vals = [bin_vals, dec2bin(double(ASCII(i)), 8)];
     end
 
     % get values from R
@@ -32,7 +31,7 @@ function hc = MINHASH_hashFunctions(item, R, hf)
         hc_bin = bitshift(hc_bin, 1);  
     end
     % Apply final XOR with additional constants
-    hc_bin = bitxor(hc_bin + uint32(b),uint32(dis));
+    hc_bin =hc_bin + uint32(b);
 
     % Ensure that the final hash is within range by using modulo
     hc = mod(hc_bin,p);

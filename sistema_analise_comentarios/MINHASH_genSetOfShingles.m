@@ -13,8 +13,8 @@ function [Set,indices] = MINHASH_genSetOfShingles(data,shingle_size)
         sentence_raw = string(...
             data{row_i});
         sentence_raw = lower(sentence_raw);
-        sentence = regexprep(sentence_raw,'[^a-zA-Z.,!?;: ]','');
-
+        %sentence = regexprep(sentence_raw,'[^a-zA-Z.,!?;: ]','');
+        sentence = sentence_raw;
         len = strlength(sentence);
         % if length of the row is less than shingle size then skip it
         if len < shingle_size

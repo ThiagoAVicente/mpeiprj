@@ -21,6 +21,7 @@ function response = NAIVEBAYES_prepare(mssg)
     % remove non alpha-numerics from each part but keep punctuation still
     parts = regexprep(parts, '[^a-zA-Z.,!?;:]', '');
     
+
     % negation words [TODO] add more
     negationWords = { ...
     'not', 'none', 'never', 'nowhere', 'nothing', ...
@@ -29,7 +30,16 @@ function response = NAIVEBAYES_prepare(mssg)
     'wasnt', 'werent', 'havent', 'hasnt', 'hadnt', 'without' ...
     };
 
-    negationWordsDict = containers.Map(negationWords,1:length(negationWords));
+    m = length(negationWords);
+    [n,k] = getParams(m,10e-4);
+
+    bf = FILTROBLOOM_class(n,k);
+    
+    for word_i = 1:m
+        bf.addElement(negationWords{word_i});
+    end
+
+    %negationWordsDict = containers.Map(negationWords,1:length(negationWords));
 
     negate = false;
 
@@ -46,9 +56,11 @@ function response = NAIVEBAYES_prepare(mssg)
         end
 
         % check if it is a negation word
-        if isKey( ...
-                negationWordsDict, ...
-                clean_word)
+        %if isKey( ...
+        %        negationWordsDict, ...
+        %        clean_word)
+        
+        if bf.checkElement(word)
             negate = true;
             response = strcat(response,[' ' clean_word]);
             continue

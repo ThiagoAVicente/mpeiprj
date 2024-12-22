@@ -37,7 +37,7 @@ output = uilistbox(tab1, 'Position', [25, 25, width-50, height-(height-515+25)],
     'ValueChangedFcn', @(src, event) ...
     naiveBayes_countingfilter(src,naivebayes_label,prior, ...
                     vocabulary,loglikelihood,classes,minSize,counting_bloom_filter,countingbf_label));
-
+mode = uicheckbox(tab1,'Position',[730 530 90 20],'Text','LSH');
 output.Items = {};
 
 %% second tab
@@ -89,12 +89,12 @@ end
 
 % on update searchbar call all fucntions
 search_bar.ValueChangedFcn = @(src, event) processData(src,threshold_slider,output,users,reviews, ...
-    shingle_size,bloom_filter,MH,R,indices);
+    shingle_size,bloom_filter,MH,R,indices,LSH,D,mode);
 
 function processData(search_bar,threshold_slider,output_field,users, ...
-    reviews,shingle_size,bloom_filter,MH,R,indices)
+    reviews,shingle_size,bloom_filter,MH,R,indices,LSH,D,mode)
     % call bloomfilter, naive bayes and minhash
-
+    lsh = mode.Value;
     threshold = threshold_slider.Value;
     toSearch = search_bar.Value;
     if isempty(toSearch) || length(toSearch) < shingle_size
@@ -104,7 +104,7 @@ function processData(search_bar,threshold_slider,output_field,users, ...
 
     %% BLOOM FILTER
     % use bloom filter to check if any word in search bar is in dataset
-    words = split(lower(toSearch),' ');
+     words = split(lower(toSearch),' ');
     words = words(strlength(words) > 0); 
     %disp(words)
     minimum = 1;
@@ -127,9 +127,21 @@ function processData(search_bar,threshold_slider,output_field,users, ...
     end
 
     %% MINHASH
-    similar = MINHASH_findSimilar(toSearch,...
+    
+    if lsh 
+        %disp("LSH")
+        similar = LSH_findSimilar(toSearch ...
+        ,shingle_size, ...
+        MH,threshold,R, ...
+        LSH,D);
+    
+    else    
+        similar = MINHASH_findSimilar(toSearch,...
                     shingle_size,MH, ...
                     threshold,R);
+    end
+    
+    
     similarItems = {};
     %disp(similar)
     for i = indices(similar)

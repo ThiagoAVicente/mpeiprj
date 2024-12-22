@@ -4,11 +4,11 @@ clc
 load("save/data.mat")
 
 %% SEARCH
-toSearch = 'good';
+toSearch = 'love this';
 % limit of similar itens to show
 limit = 10;
 threshold = 0.5; % jacard sim
-
+lsh = 1; % 1 para usar lsh
 %% MINHASH e BLOOMFILTER
 % check if any shingle is in the dataset
 
@@ -16,38 +16,47 @@ threshold = 0.5; % jacard sim
 shingles = shingles{1};
 
 % check if any shingle is in bloom_filter
+words = split(lower(toSearch),' ');
+words = words(strlength(words) > 0); 
+%disp(words)
+minimum = 1;
 response = false;
 count = 0;
-minimum = 1;
-for i =1:length(shingles)
-    
-    shingle = shingles{i};
-    if bloom_filter.checkElement(shingle)
-        
+for i = 1:length(words)
+    if bloom_filter.checkElement(words{i})
         count = count+1;
-        if count < minimum
-            continue
+        if count >= minimum
+            response = true;
+            break
         end
-        
-        response = true;
-        break
     end
-
 end
 
 % if exists them find similars using minhash
-similar = [];
-if response == 0
-    disp("Nenhuma dessas palavras encontra-se no dataset")
+if response == false
+    disp('Filtro bloom: nenhum comentário com essas palavras');
     return
 end
 
-similar = MINHASH_findSimilar(toSearch,...
-                shingle_size,MH, ...
-                threshold,R);
-% display similar
+if lsh
+    similar = LSH_findSimilar(toSearch ...
+        ,shingle_size, ...
+        MH,threshold,R, ...
+        LSH,D);
+else
+    similar = MINHASH_findSimilar(toSearch,...
+        shingle_size,MH, ...
+        threshold,R);
+end
+
 disp("Similar comments: ")
-for i = indices(similar(1:limit))
+
+if isempty(similar)
+    return
+end
+% display similar
+last = min(limit,length(similar));
+for i = indices(similar(1:last))
     fprintf("%s: %s\n",users{i},reviews{i});
 
 end

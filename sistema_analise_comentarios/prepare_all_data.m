@@ -3,8 +3,8 @@ clc
 tic
 
 %% DATASET
-%dataset = '5000';
-dataset = '15000';
+dataset = '5000';
+%dataset = '15000';
 p_falsos_positivos = 1e-4;
 
 %% NAIVE BAYES --- likelihood  vocabulary minsizeBoW classes prior
@@ -126,7 +126,7 @@ shingle_size = 4;
 [shingles,indices] = MINHASH_genSetOfShingles(reviews,shingle_size);
 
 %% hash function
-R = MINHASH_genHashFunc(20);
+R = MINHASH_genHashFunc(30);
 
 %% minhash matrice
 MH = MINHASH_genMH(shingles,R);
@@ -172,7 +172,18 @@ for i = 1:length(users)
 end
 delete(wb)
 
+%% LSH
+
+% params
+%s = 0.8;
+b = 10;
+% generate hash function
+
+D = LSH_genHashFunction(b,size(MH,1)/b);
+[LSH,D] = LSH_genLSH(b,MH,D);
+
+
 %% save data
 save("save/data.mat","bloom_filter","MH","R","reviews","shingle_size", ...
-            "users","vocabulary","loglikelihood","indices","prior","classes","minSize","counting_bloom_filter")
+            "users","vocabulary","loglikelihood","indices","prior","classes","minSize","counting_bloom_filter","LSH","D")
 toc
